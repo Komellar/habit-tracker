@@ -1,12 +1,13 @@
-import eslintPluginPrettier from 'eslint-plugin-prettier';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
+
 import { FlatCompat } from '@eslint/eslintrc';
-import tseslint from 'typescript-eslint';
 import js from '@eslint/js';
-import globals from 'globals';
 import tsParser from '@typescript-eslint/parser';
-import pluginImportX from 'eslint-plugin-import-x';
+import { flatConfigs } from 'eslint-plugin-import-x';
+import eslintPluginPrettier from 'eslint-plugin-prettier';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -15,11 +16,11 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-export default [
+const config = [
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
   js.configs.recommended,
-  pluginImportX.flatConfigs.recommended,
-  pluginImportX.flatConfigs.typescript,
+  flatConfigs.recommended,
+  flatConfigs.typescript,
   ...tseslint.configs.strict,
   ...tseslint.configs.stylistic,
   {
@@ -84,3 +85,5 @@ export default [
     },
   },
 ];
+
+export default config;
