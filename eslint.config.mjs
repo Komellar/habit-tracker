@@ -7,7 +7,7 @@ import tsParser from '@typescript-eslint/parser';
 import { flatConfigs } from 'eslint-plugin-import-x';
 import eslintPluginPrettier from 'eslint-plugin-prettier';
 import globals from 'globals';
-import tseslint from 'typescript-eslint';
+import { configs } from 'typescript-eslint';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -21,8 +21,8 @@ const config = [
   js.configs.recommended,
   flatConfigs.recommended,
   flatConfigs.typescript,
-  ...tseslint.configs.strict,
-  ...tseslint.configs.stylistic,
+  ...configs.strict,
+  ...configs.stylistic,
   {
     plugins: {
       prettier: eslintPluginPrettier,
