@@ -1,6 +1,6 @@
 'use server';
 
-import prisma from '@/lib/db';
+import { addHabit } from '@/db/habit';
 import { createHabitSchema } from '@/models/habit';
 
 import { Prisma } from '../../generated/prisma';
@@ -50,9 +50,7 @@ export async function createHabit(
       return { errors, fields: data };
     }
 
-    await prisma.habit.create({
-      data: result.data,
-    });
+    await addHabit(result.data);
 
     console.log('GIT JEST GITEM');
     return { fields: {} };
