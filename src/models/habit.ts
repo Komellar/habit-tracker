@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { COLOR_KEYS } from '@/utils/colors';
+
 export const createHabitSchema = z.object({
   title: z
     .string()
@@ -9,5 +11,6 @@ export const createHabitSchema = z.object({
     .string()
     .max(500, 'Description must be less than 500 characters')
     .optional(),
-  goal: z.number().int().optional(),
+  goal: z.number().int().positive().optional(),
+  color: z.enum(COLOR_KEYS),
 });

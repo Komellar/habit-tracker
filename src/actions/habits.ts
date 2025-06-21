@@ -2,6 +2,7 @@
 
 import { addHabit } from '@/db/habit';
 import { createHabitSchema } from '@/models/habit';
+import { ColorKey } from '@/utils/colors';
 
 import { Prisma } from '../../generated/prisma';
 
@@ -9,12 +10,14 @@ interface Errors {
   title?: string;
   description?: string;
   goal?: string;
+  color?: string;
 }
 
 interface Fields {
   title?: string;
   description?: string;
   goal?: number;
+  color?: ColorKey;
 }
 
 interface FormState {
@@ -30,16 +33,19 @@ export async function createHabit(
     const title = formData.get('title') as string;
     const description = formData.get('description') as string;
     const goal = formData.get('goal') as string | null;
+    const color = formData.get('color') as string;
 
     const data = {
       title: title.length ? title : undefined,
       description: description.length ? description : undefined,
       goal: goal ? Number(goal) : undefined,
+      color: color as ColorKey,
     };
 
     const result = createHabitSchema.safeParse(data);
 
     if (!result.success) {
+      console.log('bbbbb');
       const errors: Errors = {};
 
       result.error.errors.forEach((err) => {
@@ -50,13 +56,13 @@ export async function createHabit(
       return { errors, fields: data };
     }
 
+    console.log('aaaaa');
     await addHabit(result.data);
 
-    console.log('GIT JEST GITEM');
+    console.log('git');
     return { fields: {} };
   } catch (error) {
-    console.log('kurdebele!!!!!!!');
-    console.log(error);
+    console.log('Error creating habit:', error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       throw new Error(`Database error: ${error.message}`);
     } else {
