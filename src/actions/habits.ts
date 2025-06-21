@@ -1,6 +1,9 @@
 'use server';
 
-import { addHabit } from '@/db/habit';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
+
+import { addHabit, removeHabit } from '@/db/habit';
 import { createHabitSchema } from '@/models/habit';
 import { ColorKey } from '@/utils/colors';
 
@@ -45,7 +48,6 @@ export async function createHabit(
     const result = createHabitSchema.safeParse(data);
 
     if (!result.success) {
-      console.log('bbbbb');
       const errors: Errors = {};
 
       result.error.errors.forEach((err) => {
@@ -56,11 +58,7 @@ export async function createHabit(
       return { errors, fields: data };
     }
 
-    console.log('aaaaa');
     await addHabit(result.data);
-
-    console.log('git');
-    return { fields: {} };
   } catch (error) {
     console.log('Error creating habit:', error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -68,6 +66,22 @@ export async function createHabit(
     } else {
       console.error('Unexpected error:', error);
       throw new Error('An unexpected error occurred while creating the habit.');
+    }
+  } finally {
+    revalidatePath('/habits');
+    redirect('/habits');
+  }
+}
+
+export async function deleteHabit(_prevState: unknown, habitId: string) {
+  try {
+    await removeHabit(habitId);
+  } catch (error) {
+    console.error('Error removing habit:', error);
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      throw new Error(`Database error: ${error.message}`);
+    } else {
+      throw new Error('An unexpected error occurred while removing the habit.');
     }
   }
 }

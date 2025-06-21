@@ -19,3 +19,9 @@ export async function getHabits() {
     },
   });
 }
+
+export async function removeHabit(id: string) {
+  return prisma.habit.delete({
+    where: { id },
+  });
+}
