@@ -20,13 +20,20 @@ enum HabitColor {
 }
 
 model Habit {
-    id          String     @id @default(uuid())
+    id          String            @id @default(uuid())
     title       String
     description String?
-    createdAt   DateTime   @default(now())
-    updatedAt   DateTime   @updatedAt
-    isActive    Boolean    @default(true)
-    streak      Int        @default(0)
+    createdAt   DateTime          @default(now())
+    updatedAt   DateTime          @updatedAt
+    streak      Int               @default(0)
     goal        Int?
     color       HabitColor
+    completions HabitCompletion[]
+}
+
+model HabitCompletion {
+    id      String   @id @default(uuid())
+    date    DateTime @default(now())
+    habit   Habit    @relation(fields: [habitId], references: [id])
+    habitId String
 }

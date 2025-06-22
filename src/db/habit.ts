@@ -20,8 +20,23 @@ export async function getHabits() {
   });
 }
 
+export async function getHabitById(id: string) {
+  return prisma.habit.findUnique({
+    where: { id },
+  });
+}
+
 export async function removeHabit(id: string) {
   return prisma.habit.delete({
     where: { id },
+  });
+}
+
+export async function getHabitCompletions(habitId: string) {
+  return prisma.habitCompletion.findMany({
+    where: { habitId },
+    orderBy: {
+      date: 'asc',
+    },
   });
 }

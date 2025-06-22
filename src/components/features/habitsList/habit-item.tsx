@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import { useActionState } from 'react';
 
 import { deleteHabit } from '@/actions/habits';
@@ -21,7 +22,9 @@ export const HabitItem = ({ habit }: Props) => {
       <div className='flex items-start justify-between'>
         <div>
           <div className='flex items-center gap-2'>
-            <h3 className='text-lg font-bold'>{habit.title}</h3>
+            <Link href={`habits/${habit.id}`} className='text-lg font-bold'>
+              {habit.title}
+            </Link>
             <span
               className={`w-3 h-3 rounded-full`}
               style={{ backgroundColor: COLORS[habit.color] }}
