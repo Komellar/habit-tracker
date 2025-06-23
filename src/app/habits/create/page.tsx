@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
-import { COLOR_KEYS, COLORS } from '@/utils/colors';
+import { BG_COLOR_MAP, COLOR_KEYS, COLORS } from '@/utils/colors';
 
 export default function CreateHabit() {
   const [state, action, loading] = useActionState(createHabit, {
@@ -92,9 +92,9 @@ export default function CreateHabit() {
                   <RadioGroupItem
                     key={colorKey}
                     value={colorKey}
-                    className='appearance-none w-8 h-8 rounded-full border-2 border-white outline-none transition-all'
+                    className={`appearance-none w-8 h-8 rounded-full border-2 border-white outline-none 
+                      transition-all ${BG_COLOR_MAP[colorKey]}`}
                     style={{
-                      backgroundColor: COLORS[colorKey],
                       boxShadow:
                         selectedColor === colorKey
                           ? '0 0 0 2px #6366f1'

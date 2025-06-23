@@ -45,7 +45,7 @@ const initialCompletions: Prisma.HabitCompletionCreateInput[] = [
     },
   },
   {
-    date: new Date('2025-06-221'),
+    date: new Date('2025-06-21'),
     habit: {
       connect: { id: 'clx3v1k2d0001z8l1v7n4m8e2' },
     },

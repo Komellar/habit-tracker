@@ -1,6 +1,6 @@
 'use client';
 import { Calendar } from '@/components/ui/calendar';
-import { ColorKey, COLORS } from '@/utils/colors';
+import { BG_COLOR_MAP, ColorKey } from '@/utils/colors';
 
 interface Props {
   completedDates: Date[];
@@ -22,28 +22,21 @@ export const CompletionCalendar = ({ completedDates, habitColor }: Props) => {
           completed: (date) =>
             completedDateStrings.includes(date.toISOString().slice(0, 10)),
         }}
-        modifiersStyles={{
-          completed: {
-            backgroundColor: `${COLORS[habitColor]}`,
-            color: '#fff',
-            borderRadius: '0.375rem',
-          },
-          today: {
-            border: '2px solid white',
-          },
+        modifiersClassNames={{
+          completed: `${BG_COLOR_MAP[habitColor]} rounded-md`,
         }}
         classNames={{
           day: 'pointer-events-none border border-transparent p-2 m-1',
           day_button: 'bg-transparent!',
           button_next: 'hover:cursor-pointer',
           button_previous: 'hover:cursor-pointer',
+          today: 'border-2 border-white',
         }}
       />
       <div className='flex gap-4 mt-4 min-w-[120px]'>
         <div className='flex items-center gap-2'>
           <span
-            className='inline-block w-4 h-4 rounded-full'
-            style={{ backgroundColor: COLORS[habitColor] }}
+            className={`inline-block w-4 h-4 rounded-full ${BG_COLOR_MAP[habitColor]}`}
           />
           <span className='text-sm text-neutral-300'>Completed day</span>
         </div>

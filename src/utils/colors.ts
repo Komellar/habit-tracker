@@ -21,3 +21,14 @@ export const COLORS: Record<ColorKey, string> = {
   lime: '#84cc16',
   orange: '#f97316',
 };
+
+export const BG_COLOR_MAP = {
+  blue: 'bg-blue',
+  emerald: 'bg-emerald',
+  amber: 'bg-amber',
+  violet: 'bg-violet',
+  red: 'bg-red',
+  cyan: 'bg-cyan',
+  lime: 'bg-lime',
+  orange: 'bg-orange',
+};
