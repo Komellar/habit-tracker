@@ -1,13 +1,15 @@
 import prisma from '@/lib/db';
-import { ColorKey } from '@/utils/colors';
 
-export async function addHabit(data: {
-  title: string;
-  description?: string;
-  goal?: number;
-  color: ColorKey;
-}) {
+import { Prisma } from '../../generated/prisma';
+export async function addHabit(data: Prisma.HabitCreateInput) {
   return prisma.habit.create({
+    data,
+  });
+}
+
+export async function editHabit(id: string, data: Prisma.HabitUpdateInput) {
+  return prisma.habit.update({
+    where: { id },
     data,
   });
 }
@@ -30,9 +32,14 @@ export async function getHabitById(id: string) {
 }
 
 export async function removeHabit(id: string) {
-  return prisma.habit.delete({
-    where: { id },
-  });
+  return prisma.$transaction([
+    prisma.habitCompletion.deleteMany({
+      where: { habitId: id },
+    }),
+    prisma.habit.delete({
+      where: { id },
+    }),
+  ]);
 }
 
 export async function getHabitCompletions(habitId: string) {

@@ -28,8 +28,6 @@ export const CompletionCalendar = ({ completedDates, habitColor }: Props) => {
         classNames={{
           day: 'pointer-events-none border border-transparent p-2 m-1',
           day_button: 'bg-transparent!',
-          button_next: 'hover:cursor-pointer',
-          button_previous: 'hover:cursor-pointer',
           today: 'border-2 border-white',
         }}
       />

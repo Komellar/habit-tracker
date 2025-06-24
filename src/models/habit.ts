@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { COLOR_KEYS } from '@/utils/colors';
 
-export const createHabitSchema = z.object({
+export const createUpdateHabitSchema = z.object({
   title: z
     .string()
     .min(1, 'Title is required')

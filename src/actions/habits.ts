@@ -1,10 +1,15 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
+import { redirect, RedirectType } from 'next/navigation';
 
-import { addHabit, createHabitCompletion, removeHabit } from '@/db/habit';
-import { createHabitSchema } from '@/models/habit';
+import {
+  addHabit,
+  createHabitCompletion,
+  editHabit,
+  removeHabit,
+} from '@/db/habit';
+import { createUpdateHabitSchema } from '@/models/habit';
 import { ColorKey } from '@/utils/colors';
 
 import { Prisma } from '../../generated/prisma';
@@ -45,7 +50,7 @@ export async function createHabit(
       color: color as ColorKey,
     };
 
-    const result = createHabitSchema.safeParse(data);
+    const result = createUpdateHabitSchema.safeParse(data);
 
     if (!result.success) {
       const errors: Errors = {};
@@ -73,7 +78,57 @@ export async function createHabit(
   }
 }
 
-export async function deleteHabit(_prevState: unknown, habitId: string) {
+export async function updateHabit(
+  habitId: string,
+  _prevState: unknown,
+  formData: FormData
+): Promise<FormState> {
+  try {
+    const title = formData.get('title') as string;
+    const description = formData.get('description') as string;
+    const goal = formData.get('goal') as string | null;
+    const color = formData.get('color') as string;
+
+    const data = {
+      title: title.length ? title : undefined,
+      description: description.length ? description : undefined,
+      goal: goal ? Number(goal) : undefined,
+      color: color as ColorKey,
+    };
+
+    const result = createUpdateHabitSchema.safeParse(data);
+
+    if (!result.success) {
+      const errors: Errors = {};
+
+      result.error.errors.forEach((err) => {
+        if (err.path[0] && typeof err.path[0] === 'string') {
+          errors[err.path[0] as keyof Errors] = err.message;
+        }
+      });
+      return { errors, fields: data };
+    }
+
+    await editHabit(habitId, result.data);
+  } catch (error) {
+    console.log('Error updating habit:', error);
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      throw new Error(`Database error: ${error.message}`);
+    } else {
+      console.error('Unexpected error:', error);
+      throw new Error('An unexpected error occurred while updating the habit.');
+    }
+  } finally {
+    revalidatePath('/habits');
+    redirect(`/habits/${habitId}`, RedirectType.replace);
+  }
+}
+
+export async function deleteHabit(
+  habitId: string,
+  withRedirection = false,
+  _prevState: unknown
+) {
   try {
     await removeHabit(habitId);
     revalidatePath('/habits');
@@ -83,6 +138,10 @@ export async function deleteHabit(_prevState: unknown, habitId: string) {
       throw new Error(`Database error: ${error.message}`);
     } else {
       throw new Error('An unexpected error occurred while removing the habit.');
+    }
+  } finally {
+    if (withRedirection) {
+      redirect('/habits', RedirectType.replace);
     }
   }
 }

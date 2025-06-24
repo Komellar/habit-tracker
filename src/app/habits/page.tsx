@@ -1,8 +1,8 @@
 import Link from 'next/link';
 
-import { HabitItem } from '@/components/features/habitsList/habit-item';
-import { InfoBanner } from '@/components/features/habitsList/info-banner';
-import { StatsCards } from '@/components/features/habitsList/stats-cards';
+import { HabitItem } from '@/components/features/habits-list/habit-item';
+import { InfoBanner } from '@/components/features/habits-list/info-banner';
+import { StatsCards } from '@/components/features/habits-list/stats-cards';
 import { getHabits } from '@/db/habit';
 
 export default async function HabitsPage() {

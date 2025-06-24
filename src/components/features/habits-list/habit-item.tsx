@@ -2,18 +2,18 @@
 import Link from 'next/link';
 import { useActionState } from 'react';
 
-import { addHabitCompletion, deleteHabit } from '@/actions/habits';
+import { addHabitCompletion } from '@/actions/habits';
+import { DeleteHabitButton } from '@/components/features/habit/delete-habit-btn';
+import { Button } from '@/components/ui/button';
+import { Habit, HabitCompletion } from '@/prisma';
 import { BG_COLOR_MAP, COLORS } from '@/utils/colors';
 import { last7Days } from '@/utils/dates';
-
-import { Habit, HabitCompletion } from '../../../../generated/prisma';
 
 interface Props {
   habit: Habit & { completions: HabitCompletion[] };
 }
 
 export const HabitItem = ({ habit }: Props) => {
-  const [, deleteAction, deleteLoading] = useActionState(deleteHabit, null);
   const [, addCompletionAction, completionLoading] = useActionState(
     addHabitCompletion,
     null
@@ -47,48 +47,20 @@ export const HabitItem = ({ habit }: Props) => {
             <p className='text-neutral-400 text-sm mt-1'>{habit.description}</p>
           )}
         </div>
-        <form
-          action={deleteAction.bind(null, habit.id)}
-          className='flex items-center'
-        >
-          {deleteLoading ? (
-            <div className='animate-spin rounded-full h-5 w-5 order-t-2 border-b-2 border-white'></div>
-          ) : (
-            <button
-              className='text-neutral-500 hover:text-red transition'
-              title='Delete habit'
-              type='submit'
-            >
-              <svg
-                width={20}
-                height={20}
-                fill='none'
-                stroke='currentColor'
-                strokeWidth={2}
-                viewBox='0 0 24 24'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M6 18L18 6M6 6l12 12'
-                />
-              </svg>
-            </button>
-          )}
-        </form>
+        <DeleteHabitButton habitId={habit.id} />
       </div>
       <form action={addCompletionAction.bind(null, habit.id)}>
         {completionLoading ? (
           <div className='animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white'></div>
         ) : (
           !isCompletedToday && (
-            <button
-              className='mt-4 px-4 py-2 rounded border font-medium transition hover:opacity-75 hover:cursor-pointer'
+            <Button
+              className='mt-4 px-4 py-2 rounded border font-medium transition hover:opacity-75'
               style={{ borderColor: COLORS[habit.color] }}
               type='submit'
             >
               ✓ Mark Done
-            </button>
+            </Button>
           )
         )}
       </form>
