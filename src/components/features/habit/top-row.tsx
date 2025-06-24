@@ -11,9 +11,7 @@ export const TopRow = ({ title, color }: Props) => {
       <div className='flex items-center gap-3'>
         <span
           className={`w-7 h-7 rounded-full ${BG_COLOR_MAP[color]} flex items-center justify-center`}
-        >
-          {/* colored dot */}
-        </span>
+        ></span>
         <h1 className='text-2xl font-bold'>{title}</h1>
       </div>
       <div className='flex gap-2'>

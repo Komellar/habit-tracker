@@ -27,12 +27,6 @@ const initialHabits: Prisma.HabitCreateInput[] = [
 
 const initialCompletions: Prisma.HabitCompletionCreateInput[] = [
   {
-    date: new Date('2025-06-20'),
-    habit: {
-      connect: { id: 'clx3v1k2d0002z8l1j5k6p3r3' },
-    },
-  },
-  {
     date: new Date('2025-06-21'),
     habit: {
       connect: { id: 'clx3v1k2d0002z8l1j5k6p3r3' },
@@ -45,7 +39,19 @@ const initialCompletions: Prisma.HabitCompletionCreateInput[] = [
     },
   },
   {
+    date: new Date('2025-06-23'),
+    habit: {
+      connect: { id: 'clx3v1k2d0002z8l1j5k6p3r3' },
+    },
+  },
+  {
     date: new Date('2025-06-21'),
+    habit: {
+      connect: { id: 'clx3v1k2d0001z8l1v7n4m8e2' },
+    },
+  },
+  {
+    date: new Date('2025-06-22'),
     habit: {
       connect: { id: 'clx3v1k2d0001z8l1v7n4m8e2' },
     },

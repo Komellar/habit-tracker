@@ -17,6 +17,9 @@ export async function getHabits() {
     orderBy: {
       createdAt: 'desc',
     },
+    include: {
+      completions: true,
+    },
   });
 }
 

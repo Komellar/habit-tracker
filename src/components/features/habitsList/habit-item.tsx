@@ -3,16 +3,21 @@ import Link from 'next/link';
 import { useActionState } from 'react';
 
 import { deleteHabit } from '@/actions/habits';
-import { COLORS } from '@/utils/colors';
+import { BG_COLOR_MAP, COLORS } from '@/utils/colors';
+import { last7Days } from '@/utils/dates';
 
-import { Habit } from '../../../../generated/prisma';
+import { Habit, HabitCompletion } from '../../../../generated/prisma';
 
 interface Props {
-  habit: Habit;
+  habit: Habit & { completions: HabitCompletion[] };
 }
 
 export const HabitItem = ({ habit }: Props) => {
   const [, deleteAction, pending] = useActionState(deleteHabit, null);
+
+  const completedDates = habit.completions.map((completion) =>
+    completion.date.toISOString().slice(0, 10)
+  );
 
   return (
     <div
@@ -74,18 +79,23 @@ export const HabitItem = ({ habit }: Props) => {
       <div className='mt-6'>
         <div className='text-xs text-neutral-400 mb-1'>Last 7 days</div>
         <div className='flex gap-1'>
-          {[14, 15, 16, 17, 18, 19, 20].map((day, i) => (
-            <div
-              key={day}
-              className={`flex-1 h-7 rounded
-                ${i === 6 ? 'border-2 border-white' : ''}`}
-              style={{ backgroundColor: COLORS[habit.color] }}
-            >
-              <span className='flex items-center justify-center h-full text-xs font-semibold'>
-                {day}
-              </span>
-            </div>
-          ))}
+          {last7Days.map((date, i) => {
+            const isCompleted = completedDates.includes(
+              date.toISOString().slice(0, 10)
+            );
+            const day = date.getDate();
+
+            return (
+              <div
+                key={`${habit.id}_${day}`}
+                className={`flex-1 h-7 rounded ${i === 6 ? 'border-2 border-white' : ''} ${isCompleted ? BG_COLOR_MAP[habit.color] : 'border-neutral-400 border'}`}
+              >
+                <span className='flex items-center justify-center h-full text-xs font-semibold'>
+                  {day}
+                </span>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
