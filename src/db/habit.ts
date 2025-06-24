@@ -43,3 +43,12 @@ export async function getHabitCompletions(habitId: string) {
     },
   });
 }
+
+export async function createHabitCompletion(habitId: string, date: Date) {
+  return prisma.habitCompletion.create({
+    data: {
+      habitId,
+      date,
+    },
+  });
+}

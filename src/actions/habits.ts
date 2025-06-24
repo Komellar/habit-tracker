@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-import { addHabit, removeHabit } from '@/db/habit';
+import { addHabit, createHabitCompletion, removeHabit } from '@/db/habit';
 import { createHabitSchema } from '@/models/habit';
 import { ColorKey } from '@/utils/colors';
 
@@ -76,12 +76,29 @@ export async function createHabit(
 export async function deleteHabit(_prevState: unknown, habitId: string) {
   try {
     await removeHabit(habitId);
+    revalidatePath('/habits');
   } catch (error) {
     console.error('Error removing habit:', error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       throw new Error(`Database error: ${error.message}`);
     } else {
       throw new Error('An unexpected error occurred while removing the habit.');
+    }
+  }
+}
+
+export async function addHabitCompletion(_prevState: unknown, habitId: string) {
+  try {
+    await createHabitCompletion(habitId, new Date());
+    revalidatePath(`/habits`);
+  } catch (error) {
+    console.error('Error adding habit completion:', error);
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      throw new Error(`Database error: ${error.message}`);
+    } else {
+      throw new Error(
+        'An unexpected error occurred while adding the habit completion.'
+      );
     }
   }
 }

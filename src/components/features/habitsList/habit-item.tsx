@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { useActionState } from 'react';
 
-import { deleteHabit } from '@/actions/habits';
+import { addHabitCompletion, deleteHabit } from '@/actions/habits';
 import { BG_COLOR_MAP, COLORS } from '@/utils/colors';
 import { last7Days } from '@/utils/dates';
 
@@ -13,10 +13,18 @@ interface Props {
 }
 
 export const HabitItem = ({ habit }: Props) => {
-  const [, deleteAction, pending] = useActionState(deleteHabit, null);
+  const [, deleteAction, deleteLoading] = useActionState(deleteHabit, null);
+  const [, addCompletionAction, completionLoading] = useActionState(
+    addHabitCompletion,
+    null
+  );
 
   const completedDates = habit.completions.map((completion) =>
     completion.date.toISOString().slice(0, 10)
+  );
+
+  const isCompletedToday = completedDates.includes(
+    new Date().toISOString().slice(0, 10)
   );
 
   return (
@@ -43,7 +51,7 @@ export const HabitItem = ({ habit }: Props) => {
           action={deleteAction.bind(null, habit.id)}
           className='flex items-center'
         >
-          {pending ? (
+          {deleteLoading ? (
             <div className='animate-spin rounded-full h-5 w-5 order-t-2 border-b-2 border-white'></div>
           ) : (
             <button
@@ -69,13 +77,21 @@ export const HabitItem = ({ habit }: Props) => {
           )}
         </form>
       </div>
-      <button
-        className={`mt-4 px-4 py-2 rounded border font-medium transition
-          hover:opacity-75 hover:cursor-pointer`}
-        style={{ borderColor: COLORS[habit.color] }}
-      >
-        ✓ Mark Done
-      </button>
+      <form action={addCompletionAction.bind(null, habit.id)}>
+        {completionLoading ? (
+          <div className='animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white'></div>
+        ) : (
+          !isCompletedToday && (
+            <button
+              className='mt-4 px-4 py-2 rounded border font-medium transition hover:opacity-75 hover:cursor-pointer'
+              style={{ borderColor: COLORS[habit.color] }}
+              type='submit'
+            >
+              ✓ Mark Done
+            </button>
+          )
+        )}
+      </form>
       <div className='mt-6'>
         <div className='text-xs text-neutral-400 mb-1'>Last 7 days</div>
         <div className='flex gap-1'>
