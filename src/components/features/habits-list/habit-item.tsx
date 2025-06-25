@@ -11,16 +11,13 @@ import { last7Days } from '@/utils/dates';
 
 interface Props {
   habit: Habit & { completions: HabitCompletion[] };
+  completedDates: string[];
 }
 
-export const HabitItem = ({ habit }: Props) => {
+export const HabitItem = ({ habit, completedDates }: Props) => {
   const [, addCompletionAction, completionLoading] = useActionState(
     addHabitCompletion,
     null
-  );
-
-  const completedDates = habit.completions.map((completion) =>
-    completion.date.toISOString().slice(0, 10)
   );
 
   const isCompletedToday = completedDates.includes(

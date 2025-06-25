@@ -4,11 +4,14 @@ import { HabitItem } from '@/components/features/habits-list/habit-item';
 import { InfoBanner } from '@/components/features/habits-list/info-banner';
 import { StatsCards } from '@/components/features/habits-list/stats-cards';
 import { getHabits } from '@/db/habit';
+import { getAllCompletedDays, getCompletedToday } from '@/utils/completedDates';
 
 export default async function HabitsPage() {
   const habits = await getHabits();
   const totalHabits = habits.length;
-  const doneToday = 2;
+
+  const allCompletedDates = getAllCompletedDays(habits);
+  const doneToday = getCompletedToday(allCompletedDates);
 
   return (
     <main className='min-h-screen bg-neutral-950 text-white px-4 py-8 relative'>
@@ -28,7 +31,13 @@ export default async function HabitsPage() {
           {habits.length === 0 ? (
             <p className='text-neutral-400 text-center'>No habits found.</p>
           ) : (
-            habits.map((habit) => <HabitItem habit={habit} key={habit.id} />)
+            habits.map((habit, i) => (
+              <HabitItem
+                habit={habit}
+                key={habit.id}
+                completedDates={allCompletedDates[i]}
+              />
+            ))
           )}
         </div>
       </section>
