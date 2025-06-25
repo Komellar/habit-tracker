@@ -1,41 +1,18 @@
-import { getHabitCompletions } from '@/db/habitDb';
-import { formatDate } from '@/utils/dates';
+import { Habit, HabitCompletion } from '@/prisma';
+import { getCurrentStreak, getSuccessRate } from '@/utils/habitDetails/stats';
 
 interface Props {
-  completionsLength: number;
-  streak: number;
-  habitId: string;
+  habit: Habit;
+  completions: HabitCompletion[];
 }
 
-export const StatsCards = async ({
-  completionsLength,
-  streak,
-  habitId,
-}: Props) => {
+export const StatsCards = async ({ habit, completions }: Props) => {
   const stats = {
-    completions: completionsLength,
-    successRate: 57,
-    currentStreak: streak,
     bestStreak: 8,
   };
 
-  const completions = await getHabitCompletions(habitId);
-
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayString = formatDate(yesterday);
-
-  // Check if the previous completion was yesterday
-  if (completions.length > 1) {
-    const previousCompletionDate = completions[completions.length - 2];
-    const previousCompletionDateString = formatDate(
-      previousCompletionDate.date
-    );
-
-    if (previousCompletionDateString !== yesterdayString) {
-      stats.currentStreak = 0;
-    }
-  }
+  const successRate = getSuccessRate(habit.createdAt, completions);
+  const currentStreak = getCurrentStreak(habit.streak, completions);
 
   return (
     <div className='grid grid-cols-2 gap-4 mb-8'>
@@ -57,7 +34,7 @@ export const StatsCards = async ({
           <path strokeLinecap='round' strokeLinejoin='round' d='M12 8v4l3 3' />
         </svg>
         <span className='text-neutral-400 text-xs mt-2'>Completions</span>
-        <span className='text-2xl font-bold'>{stats.completions}</span>
+        <span className='text-2xl font-bold'>{completions.length}</span>
       </div>
       <div className='bg-neutral-900 rounded-lg p-4 flex flex-col items-center shadow border border-neutral-800'>
         <svg
@@ -75,7 +52,7 @@ export const StatsCards = async ({
           <circle cx='12' cy='7' r='4' />
         </svg>
         <span className='text-green-400 text-xs mt-2'>Success Rate</span>
-        <span className='text-2xl font-bold'>{stats.successRate}%</span>
+        <span className='text-2xl font-bold'>{successRate}%</span>
       </div>
       <div className='bg-neutral-900 rounded-lg p-4 flex flex-col items-center shadow border border-neutral-800'>
         <svg
@@ -93,7 +70,7 @@ export const StatsCards = async ({
           />
         </svg>
         <span className='text-purple-400 text-xs mt-2'>Current Streak</span>
-        <span className='text-2xl font-bold'>{stats.currentStreak}</span>
+        <span className='text-2xl font-bold'>{currentStreak}</span>
       </div>
       <div className='bg-neutral-900 rounded-lg p-4 flex flex-col items-center shadow border border-neutral-800'>
         <svg

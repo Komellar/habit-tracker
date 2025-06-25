@@ -16,7 +16,7 @@ export default async function HabitsPage() {
   return (
     <main className='min-h-screen bg-neutral-950 text-white px-4 py-8 relative'>
       <InfoBanner totalHabits={totalHabits} doneToday={doneToday} />
-      <StatsCards totalHabits={totalHabits} doneToday={doneToday} />
+      <StatsCards doneToday={doneToday} habits={habits} />
       <section>
         <div className='flex items-center justify-between mb-4'>
           <h2 className='text-xl font-semibold'>Your Habits</h2>

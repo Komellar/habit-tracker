@@ -1,11 +1,24 @@
+import { Habit, HabitCompletion } from '@/prisma';
+import { getSuccessRate } from '@/utils/habitDetails/stats';
+
 interface Props {
-  totalHabits: number;
   doneToday: number;
+  habits: (Habit & { completions: HabitCompletion[] })[];
 }
 
-export const StatsCards = ({ totalHabits, doneToday }: Props) => {
-  const successRate = 29;
-  const totalStreaks = 4;
+export const StatsCards = ({ doneToday, habits }: Props) => {
+  const totalSuccessRate = habits.length
+    ? Math.floor(
+        habits
+          .map((habit) => getSuccessRate(habit.createdAt, habit.completions))
+          .reduce((sum, rate) => sum + rate, 0) / habits.length
+      )
+    : 0;
+
+  const totalStreaks = habits.reduce(
+    (sum, habit) => sum + (habit.streak || 0),
+    0
+  );
 
   return (
     <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4'>
@@ -34,7 +47,7 @@ export const StatsCards = ({ totalHabits, doneToday }: Props) => {
             </svg>
           </span>
           <span className='text-neutral-400 text-xs mb-1'>Total Habits</span>
-          <span className='text-2xl font-bold'>{totalHabits}</span>
+          <span className='text-2xl font-bold'>{habits.length}</span>
         </div>
         <div className='bg-neutral-900 rounded-lg p-4 flex flex-col items-center shadow border border-neutral-800'>
           <span className='mb-2'>
@@ -74,7 +87,7 @@ export const StatsCards = ({ totalHabits, doneToday }: Props) => {
             </svg>
           </span>
           <span className='text-purple-400 text-xs mb-1'>Success Rate</span>
-          <span className='text-2xl font-bold'>{successRate}%</span>
+          <span className='text-2xl font-bold'>{totalSuccessRate}%</span>
         </div>
         <div className='bg-neutral-900 rounded-lg p-4 flex flex-col items-center shadow border border-neutral-800'>
           <span className='mb-2'>

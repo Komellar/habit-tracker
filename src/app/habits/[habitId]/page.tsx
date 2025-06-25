@@ -24,11 +24,8 @@ export default async function HabitDetailPage({ params }: Props) {
         {habit.description && (
           <p className='mb-4 text-neutral-400'>{habit.description}</p>
         )}
-        <StatsCards
-          completionsLength={completions.length}
-          streak={habit.streak}
-          habitId={habit.id}
-        />
+
+        <StatsCards completions={completions} habit={habit} />
         <div className='bg-neutral-900 rounded-xl p-4 border border-neutral-800 shadow'>
           <CompletionCalendar
             completedDates={completedDates}
