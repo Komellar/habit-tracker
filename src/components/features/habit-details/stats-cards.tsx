@@ -7,10 +7,6 @@ interface Props {
 }
 
 export const StatsCards = async ({ habit, completions }: Props) => {
-  const stats = {
-    bestStreak: 8,
-  };
-
   const successRate = getSuccessRate(habit.createdAt, completions);
   const currentStreak = getCurrentStreak(habit.streak, completions);
 
@@ -84,7 +80,7 @@ export const StatsCards = async ({ habit, completions }: Props) => {
           <circle cx='12' cy='12' r='10' />
         </svg>
         <span className='text-orange-400 text-xs mt-2'>Best Streak</span>
-        <span className='text-2xl font-bold'>{stats.bestStreak}</span>
+        <span className='text-2xl font-bold'>{habit.bestStreak}</span>
       </div>
     </div>
   );

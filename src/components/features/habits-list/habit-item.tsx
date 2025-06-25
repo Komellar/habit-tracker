@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { useActionState } from 'react';
 
-import { addHabitCompletion } from '@/actions/habitActions';
+import { addHabitCompletion } from '@/actions/habitCompletionActions';
 import { DeleteHabitButton } from '@/components/features/habit/delete-habit-btn';
 import { Button } from '@/components/ui/button';
 import { Habit, HabitCompletion } from '@/prisma';
@@ -16,7 +16,7 @@ interface Props {
 
 export const HabitItem = ({ habit, completedDates }: Props) => {
   const [, addCompletionAction, completionLoading] = useActionState(
-    addHabitCompletion,
+    addHabitCompletion.bind(null, habit.id, habit.bestStreak, habit.streak),
     null
   );
 
@@ -44,7 +44,7 @@ export const HabitItem = ({ habit, completedDates }: Props) => {
         </div>
         <DeleteHabitButton habitId={habit.id} />
       </div>
-      <form action={addCompletionAction.bind(null, habit.id)}>
+      <form action={addCompletionAction}>
         {completionLoading ? (
           <div className='animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white'></div>
         ) : (

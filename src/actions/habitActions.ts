@@ -5,14 +5,12 @@ import { redirect, RedirectType } from 'next/navigation';
 
 import {
   addHabit,
-  createHabitCompletion,
   editHabit,
-  getHabitCompletions,
   removeHabit,
+  removeHabitCompletion,
 } from '@/db/habitDb';
 import { createUpdateHabitSchema } from '@/models/habit';
 import { ColorKey } from '@/utils/colors';
-import { formatDate } from '@/utils/dates';
 
 import { Prisma } from '../../generated/prisma';
 
@@ -133,6 +131,7 @@ export async function deleteHabit(
 ) {
   try {
     await removeHabit(habitId);
+    await removeHabitCompletion(habitId);
     revalidatePath('/habits');
   } catch (error) {
     console.error('Error removing habit:', error);
@@ -144,44 +143,6 @@ export async function deleteHabit(
   } finally {
     if (withRedirection) {
       redirect('/habits', RedirectType.replace);
-    }
-  }
-}
-
-export async function addHabitCompletion(_prevState: unknown, habitId: string) {
-  try {
-    await createHabitCompletion(habitId, new Date());
-    const completions = await getHabitCompletions(habitId);
-
-    let shouldIncrementStreak = false;
-
-    if (completions.length > 1) {
-      // Get yesterday's date in YYYY-MM-DD format
-      const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
-      const yesterdayString = formatDate(yesterday);
-
-      // Check if the previous completion was yesterday
-      const previousCompletionDate = completions[completions.length - 2];
-      const previousCompletionDateString = formatDate(
-        previousCompletionDate.date
-      );
-
-      shouldIncrementStreak = previousCompletionDateString === yesterdayString;
-    }
-
-    await editHabit(habitId, {
-      streak: shouldIncrementStreak ? { increment: 1 } : 1,
-    });
-    revalidatePath(`/habits`);
-  } catch (error) {
-    console.error('Error adding habit completion:', error);
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      throw new Error(`Database error: ${error.message}`);
-    } else {
-      throw new Error(
-        'An unexpected error occurred while adding the habit completion.'
-      );
     }
   }
 }

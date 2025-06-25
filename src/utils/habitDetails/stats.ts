@@ -21,16 +21,19 @@ export const getCurrentStreak = (
   habitStreak: number,
   completions: HabitCompletion[]
 ) => {
-  let currentStreak = habitStreak;
   if (completions.length > 1) {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
 
-    const lastCompletionDate = completions[completions.length - 2].date;
-    if (formatDate(lastCompletionDate) !== formatDate(yesterday)) {
-      currentStreak = 0;
+    const lastCompletionDates = [
+      formatDate(completions[completions.length - 1].date),
+      formatDate(completions[completions.length - 2].date),
+    ];
+
+    if (!lastCompletionDates.includes(formatDate(yesterday))) {
+      return 0;
     }
   }
 
-  return currentStreak;
+  return habitStreak;
 };

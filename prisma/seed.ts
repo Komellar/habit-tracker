@@ -23,6 +23,7 @@ const initialHabits: Prisma.HabitCreateInput[] = [
     goal: 30,
     color: 'cyan',
     streak: 2,
+    bestStreak: 2,
     createdAt: daysAgo(2),
   },
   {
@@ -32,6 +33,7 @@ const initialHabits: Prisma.HabitCreateInput[] = [
     goal: 1,
     color: 'red',
     streak: 3,
+    bestStreak: 3,
     createdAt: daysAgo(3),
   },
 ];

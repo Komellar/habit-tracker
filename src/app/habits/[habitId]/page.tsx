@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 
 import { CompletionCalendar } from '@/components/features/habit-details/completion-calendar';
+import { HabitMetadata } from '@/components/features/habit-details/habit-metadata';
 import { StatsCards } from '@/components/features/habit-details/stats-cards';
 import { TopRow } from '@/components/features/habit-details/top-row';
 import { getHabitById, getHabitCompletions } from '@/db/habitDb';
@@ -21,12 +22,17 @@ export default async function HabitDetailPage({ params }: Props) {
     <main className='min-h-screen bg-neutral-950 text-white px-4 py-8'>
       <div className='max-w-2xl mx-auto'>
         <TopRow habitId={habit.id} title={habit.title} color={habit.color} />
-        {habit.description && (
-          <p className='mb-4 text-neutral-400'>{habit.description}</p>
-        )}
-
+        <HabitMetadata
+          color={habit.color}
+          createdAt={habit.createdAt}
+          description={habit.description}
+          goal={habit.goal}
+        />
         <StatsCards completions={completions} habit={habit} />
-        <div className='bg-neutral-900 rounded-xl p-4 border border-neutral-800 shadow'>
+        <div className='bg-neutral-900 rounded-xl p-4 border border-neutral-800 shadow-lg mt-6'>
+          <h2 className='text-lg font-medium mb-4 text-neutral-200'>
+            Completion Calendar
+          </h2>
           <CompletionCalendar
             completedDates={completedDates}
             habitColor={habit.color}

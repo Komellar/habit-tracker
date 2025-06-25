@@ -59,3 +59,9 @@ export async function createHabitCompletion(habitId: string, date: Date) {
     },
   });
 }
+
+export async function removeHabitCompletion(id: string) {
+  return prisma.habitCompletion.delete({
+    where: { id },
+  });
+}
