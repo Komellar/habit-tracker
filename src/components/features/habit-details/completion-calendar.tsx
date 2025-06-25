@@ -1,6 +1,7 @@
 'use client';
 import { Calendar } from '@/components/ui/calendar';
 import { BG_COLOR_MAP, ColorKey } from '@/utils/colors';
+import { formatDate } from '@/utils/dates';
 
 interface Props {
   completedDates: Date[];
@@ -8,9 +9,7 @@ interface Props {
 }
 
 export const CompletionCalendar = ({ completedDates, habitColor }: Props) => {
-  const completedDateStrings = completedDates.map((date) =>
-    date.toISOString().slice(0, 10)
-  );
+  const completedDateStrings = completedDates.map((date) => formatDate(date));
 
   return (
     <div className='flex items-center justify-center flex-col'>
@@ -19,8 +18,12 @@ export const CompletionCalendar = ({ completedDates, habitColor }: Props) => {
         selected={completedDates}
         className='rounded-lg border border-neutral-800 bg-neutral-900 text-white'
         modifiers={{
-          completed: (date) =>
-            completedDateStrings.includes(date.toISOString().slice(0, 10)),
+          completed: (date) => {
+            const nextDay = new Date(date);
+            nextDay.setDate(nextDay.getDate() + 1);
+
+            return completedDateStrings.includes(formatDate(nextDay));
+          },
         }}
         modifiersClassNames={{
           completed: `${BG_COLOR_MAP[habitColor]} rounded-md`,

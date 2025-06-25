@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { CompletionCalendar } from '@/components/features/habit-details/completion-calendar';
 import { StatsCards } from '@/components/features/habit-details/stats-cards';
 import { TopRow } from '@/components/features/habit-details/top-row';
-import { getHabitById, getHabitCompletions } from '@/db/habit';
+import { getHabitById, getHabitCompletions } from '@/db/habitDb';
 
 interface Props {
   params: Promise<{ habitId: string }>;
@@ -24,7 +24,11 @@ export default async function HabitDetailPage({ params }: Props) {
         {habit.description && (
           <p className='mb-4 text-neutral-400'>{habit.description}</p>
         )}
-        <StatsCards completionsLength={completions.length} />
+        <StatsCards
+          completionsLength={completions.length}
+          streak={habit.streak}
+          habitId={habit.id}
+        />
         <div className='bg-neutral-900 rounded-xl p-4 border border-neutral-800 shadow'>
           <CompletionCalendar
             completedDates={completedDates}

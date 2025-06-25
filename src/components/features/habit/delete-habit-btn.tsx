@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 
-import { deleteHabit } from '@/actions/habits';
+import { deleteHabit } from '@/actions/habitActions';
 
 interface Props {
   habitId: string;

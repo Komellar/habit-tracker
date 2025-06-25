@@ -15,6 +15,7 @@ const initialHabits: Prisma.HabitCreateInput[] = [
     description: '30 minutes of exercise every day',
     goal: 30,
     color: 'cyan',
+    streak: 2,
   },
   {
     id: 'clx3v1k2d0002z8l1j5k6p3r3',
@@ -22,41 +23,57 @@ const initialHabits: Prisma.HabitCreateInput[] = [
     description: 'Read at least one book per month',
     goal: 1,
     color: 'red',
+    streak: 3,
   },
 ];
 
-const initialCompletions: Prisma.HabitCompletionCreateInput[] = [
-  {
-    date: new Date('2025-06-21'),
-    habit: {
-      connect: { id: 'clx3v1k2d0002z8l1j5k6p3r3' },
+const initialCompletions = (
+  today: Date
+): Prisma.HabitCompletionCreateInput[] => {
+  let month = today.getMonth() + 1;
+  const year = today.getFullYear();
+  let day = today.getDate();
+  if (day < 4) {
+    month -= 1; // Adjust month if today is in the first three days
+    if (month < 1) {
+      month = 12; // Wrap around to December
+    }
+    day = 30;
+  }
+
+  return [
+    {
+      date: new Date(`${year}-${month}-${day - 2}`),
+      habit: {
+        connect: { id: 'clx3v1k2d0002z8l1j5k6p3r3' },
+      },
     },
-  },
-  {
-    date: new Date('2025-06-22'),
-    habit: {
-      connect: { id: 'clx3v1k2d0002z8l1j5k6p3r3' },
+    {
+      date: new Date(`${year}-${month}-${day - 1}`),
+      habit: {
+        connect: { id: 'clx3v1k2d0002z8l1j5k6p3r3' },
+      },
     },
-  },
-  {
-    date: new Date('2025-06-23'),
-    habit: {
-      connect: { id: 'clx3v1k2d0002z8l1j5k6p3r3' },
+    {
+      date: new Date(`${year}-${month}-${day}`),
+      habit: {
+        connect: { id: 'clx3v1k2d0002z8l1j5k6p3r3' },
+      },
     },
-  },
-  {
-    date: new Date('2025-06-21'),
-    habit: {
-      connect: { id: 'clx3v1k2d0001z8l1v7n4m8e2' },
+    {
+      date: new Date(`${year}-${month}-${day - 1}`),
+      habit: {
+        connect: { id: 'clx3v1k2d0001z8l1v7n4m8e2' },
+      },
     },
-  },
-  {
-    date: new Date('2025-06-22'),
-    habit: {
-      connect: { id: 'clx3v1k2d0001z8l1v7n4m8e2' },
+    {
+      date: new Date(`${year}-${month}-${day}`),
+      habit: {
+        connect: { id: 'clx3v1k2d0001z8l1v7n4m8e2' },
+      },
     },
-  },
-];
+  ];
+};
 
 async function main() {
   for (const habit of initialHabits) {
@@ -67,7 +84,8 @@ async function main() {
     console.log('Created habit:', newHabit);
   }
 
-  for (const completion of initialCompletions) {
+  const today = new Date();
+  for (const completion of initialCompletions(today)) {
     const newCompletion = await prisma.habitCompletion.create({
       data: completion,
     });

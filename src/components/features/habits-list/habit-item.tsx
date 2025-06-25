@@ -2,12 +2,12 @@
 import Link from 'next/link';
 import { useActionState } from 'react';
 
-import { addHabitCompletion } from '@/actions/habits';
+import { addHabitCompletion } from '@/actions/habitActions';
 import { DeleteHabitButton } from '@/components/features/habit/delete-habit-btn';
 import { Button } from '@/components/ui/button';
 import { Habit, HabitCompletion } from '@/prisma';
 import { BG_COLOR_MAP, COLORS } from '@/utils/colors';
-import { last7Days } from '@/utils/dates';
+import { formatDate, last7Days } from '@/utils/dates';
 
 interface Props {
   habit: Habit & { completions: HabitCompletion[] };
@@ -20,9 +20,7 @@ export const HabitItem = ({ habit, completedDates }: Props) => {
     null
   );
 
-  const isCompletedToday = completedDates.includes(
-    new Date().toISOString().slice(0, 10)
-  );
+  const isCompletedToday = completedDates.includes(formatDate(new Date()));
 
   return (
     <div
@@ -65,9 +63,7 @@ export const HabitItem = ({ habit, completedDates }: Props) => {
         <div className='text-xs text-neutral-400 mb-1'>Last 7 days</div>
         <div className='flex gap-1'>
           {last7Days.map((date, i) => {
-            const isCompleted = completedDates.includes(
-              date.toISOString().slice(0, 10)
-            );
+            const isCompleted = completedDates.includes(formatDate(date));
             const day = date.getDate();
 
             return (

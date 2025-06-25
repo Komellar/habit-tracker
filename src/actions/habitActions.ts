@@ -7,10 +7,12 @@ import {
   addHabit,
   createHabitCompletion,
   editHabit,
+  getHabitCompletions,
   removeHabit,
-} from '@/db/habit';
+} from '@/db/habitDb';
 import { createUpdateHabitSchema } from '@/models/habit';
 import { ColorKey } from '@/utils/colors';
+import { formatDate } from '@/utils/dates';
 
 import { Prisma } from '../../generated/prisma';
 
@@ -149,6 +151,28 @@ export async function deleteHabit(
 export async function addHabitCompletion(_prevState: unknown, habitId: string) {
   try {
     await createHabitCompletion(habitId, new Date());
+    const completions = await getHabitCompletions(habitId);
+
+    let shouldIncrementStreak = false;
+
+    if (completions.length > 1) {
+      // Get yesterday's date in YYYY-MM-DD format
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayString = formatDate(yesterday);
+
+      // Check if the previous completion was yesterday
+      const previousCompletionDate = completions[completions.length - 2];
+      const previousCompletionDateString = formatDate(
+        previousCompletionDate.date
+      );
+
+      shouldIncrementStreak = previousCompletionDateString === yesterdayString;
+    }
+
+    await editHabit(habitId, {
+      streak: shouldIncrementStreak ? { increment: 1 } : 1,
+    });
     revalidatePath(`/habits`);
   } catch (error) {
     console.error('Error adding habit completion:', error);

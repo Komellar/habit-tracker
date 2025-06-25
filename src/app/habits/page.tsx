@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { HabitItem } from '@/components/features/habits-list/habit-item';
 import { InfoBanner } from '@/components/features/habits-list/info-banner';
 import { StatsCards } from '@/components/features/habits-list/stats-cards';
-import { getHabits } from '@/db/habit';
+import { getHabits } from '@/db/habitDb';
 import { getAllCompletedDays, getCompletedToday } from '@/utils/completedDates';
 
 export default async function HabitsPage() {
