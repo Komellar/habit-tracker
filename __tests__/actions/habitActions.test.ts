@@ -1,12 +1,14 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { ZodError } from 'zod';
 
 import { createHabit, deleteHabit, updateHabit } from '@/actions/habitActions';
 import { removeHabitCompletion } from '@/db/habitCompletionDb';
 import { addHabit, editHabit, removeHabit } from '@/db/habitDb';
 import { createUpdateHabitSchema } from '@/models/habit';
 import { Prisma } from '@/prisma';
+import { ColorKey } from '@/utils/colors';
 
 vi.mock('next/cache', () => ({
   revalidatePath: vi.fn(),
@@ -57,10 +59,10 @@ describe('habitActions', () => {
         title: 'Test Habit',
         description: 'Test Description',
         goal: 5,
-        color: 'blue',
+        color: 'blue' as ColorKey,
       };
 
-      (createUpdateHabitSchema.safeParse as Mock).mockReturnValue({
+      vi.mocked(createUpdateHabitSchema.safeParse).mockReturnValue({
         success: true,
         data: validatedData,
       });
@@ -87,10 +89,10 @@ describe('habitActions', () => {
 
       const validatedData = {
         title: 'Test Habit',
-        color: 'red',
+        color: 'red' as ColorKey,
       };
 
-      (createUpdateHabitSchema.safeParse as Mock).mockReturnValue({
+      vi.mocked(createUpdateHabitSchema.safeParse).mockReturnValue({
         success: true,
         data: validatedData,
       });
@@ -110,22 +112,26 @@ describe('habitActions', () => {
       mockFormData.append('color', 'invalid-color'); // Invalid color
       mockFormData.append('description', '');
 
-      const mockErrors = [
+      const zodError = new ZodError([
         {
           path: ['title'],
           message: 'Title is required',
+          code: 'invalid_type',
+          expected: 'string',
+          received: 'undefined',
         },
         {
           path: ['color'],
           message: 'Invalid color',
+          code: 'invalid_enum_value',
+          options: ['red', 'blue', 'green', 'purple'],
+          received: 'invalid-color',
         },
-      ];
+      ]);
 
-      (createUpdateHabitSchema.safeParse as Mock).mockReturnValue({
+      vi.mocked(createUpdateHabitSchema.safeParse).mockReturnValue({
         success: false,
-        error: {
-          errors: mockErrors,
-        },
+        error: zodError,
       });
 
       const result = await createHabit({}, mockFormData);
@@ -153,7 +159,7 @@ describe('habitActions', () => {
       mockFormData.append('color', 'blue');
       mockFormData.append('description', '');
 
-      (createUpdateHabitSchema.safeParse as Mock).mockReturnValue({
+      vi.mocked(createUpdateHabitSchema.safeParse).mockReturnValue({
         success: true,
         data: {
           title: 'Test Habit',
@@ -165,7 +171,7 @@ describe('habitActions', () => {
         'Database error',
         { code: 'P2002', clientVersion: '4.0.0' }
       );
-      (addHabit as Mock).mockRejectedValue(dbError);
+      vi.mocked(addHabit).mockRejectedValue(dbError);
 
       await expect(createHabit({}, mockFormData)).rejects.toThrow(
         'Database error'
@@ -181,7 +187,7 @@ describe('habitActions', () => {
       mockFormData.append('title', 'Test Habit');
       mockFormData.append('color', 'blue');
 
-      (createUpdateHabitSchema.safeParse as Mock).mockReturnValue({
+      vi.mocked(createUpdateHabitSchema.safeParse).mockReturnValue({
         success: true,
         data: {
           title: 'Test Habit',
@@ -190,7 +196,7 @@ describe('habitActions', () => {
       });
 
       const unexpectedError = new Error('Unexpected error');
-      (addHabit as Mock).mockRejectedValue(unexpectedError);
+      vi.mocked(addHabit).mockRejectedValue(unexpectedError);
 
       await expect(createHabit({}, mockFormData)).rejects.toThrow(
         'An unexpected error occurred while creating the habit.'
@@ -216,10 +222,10 @@ describe('habitActions', () => {
         title: 'Updated Habit',
         description: 'Updated Description',
         goal: 10,
-        color: 'green',
+        color: 'green' as ColorKey,
       };
 
-      (createUpdateHabitSchema.safeParse as Mock).mockReturnValue({
+      vi.mocked(createUpdateHabitSchema.safeParse).mockReturnValue({
         success: true,
         data: validatedData,
       });
@@ -246,10 +252,10 @@ describe('habitActions', () => {
 
       const validatedData = {
         title: 'Updated Habit',
-        color: 'purple',
+        color: 'purple' as ColorKey,
       };
 
-      (createUpdateHabitSchema.safeParse as Mock).mockReturnValue({
+      vi.mocked(createUpdateHabitSchema.safeParse).mockReturnValue({
         success: true,
         data: validatedData,
       });
@@ -271,22 +277,26 @@ describe('habitActions', () => {
       mockFormData.append('color', 'invalid-color'); // Invalid color
       mockFormData.append('description', 'Some description');
 
-      const mockErrors = [
+      const zodError = new ZodError([
         {
           path: ['title'],
           message: 'Title is required',
+          code: 'invalid_type',
+          expected: 'string',
+          received: 'undefined',
         },
         {
           path: ['color'],
           message: 'Invalid color',
+          code: 'invalid_enum_value',
+          options: ['red', 'blue', 'green', 'purple'],
+          received: 'invalid-color',
         },
-      ];
+      ]);
 
-      (createUpdateHabitSchema.safeParse as Mock).mockReturnValue({
+      vi.mocked(createUpdateHabitSchema.safeParse).mockReturnValue({
         success: false,
-        error: {
-          errors: mockErrors,
-        },
+        error: zodError,
       });
 
       const result = await updateHabit(habitId, {}, mockFormData);
@@ -313,7 +323,7 @@ describe('habitActions', () => {
       mockFormData.append('color', 'blue');
       mockFormData.append('description', 'test');
 
-      (createUpdateHabitSchema.safeParse as Mock).mockReturnValue({
+      vi.mocked(createUpdateHabitSchema.safeParse).mockReturnValue({
         success: true,
         data: {
           title: 'Updated Habit',
@@ -326,7 +336,7 @@ describe('habitActions', () => {
         'Database error',
         { code: 'P2002', clientVersion: '4.0.0' }
       );
-      (editHabit as Mock).mockRejectedValue(dbError);
+      vi.mocked(editHabit).mockRejectedValue(dbError);
 
       await expect(updateHabit(habitId, {}, mockFormData)).rejects.toThrow(
         'Database error'
@@ -342,7 +352,7 @@ describe('habitActions', () => {
       mockFormData.append('title', 'Updated Habit');
       mockFormData.append('color', 'blue');
 
-      (createUpdateHabitSchema.safeParse as Mock).mockReturnValue({
+      vi.mocked(createUpdateHabitSchema.safeParse).mockReturnValue({
         success: true,
         data: {
           title: 'Updated Habit',
@@ -351,7 +361,7 @@ describe('habitActions', () => {
       });
 
       const unexpectedError = new Error('Unexpected error');
-      (editHabit as Mock).mockRejectedValue(unexpectedError);
+      vi.mocked(editHabit).mockRejectedValue(unexpectedError);
 
       await expect(updateHabit(habitId, {}, mockFormData)).rejects.toThrow(
         'An unexpected error occurred while updating the habit.'
@@ -394,7 +404,7 @@ describe('habitActions', () => {
         'Database error',
         { code: 'P2002', clientVersion: '4.0.0' }
       );
-      (removeHabit as Mock).mockRejectedValue(dbError);
+      vi.mocked(removeHabit).mockRejectedValue(dbError);
 
       await expect(deleteHabit(habitId, false, {})).rejects.toThrow(
         'Database error'
@@ -413,7 +423,7 @@ describe('habitActions', () => {
         'Database error',
         { code: 'P2002', clientVersion: '4.0.0' }
       );
-      (removeHabitCompletion as Mock).mockRejectedValue(dbError);
+      vi.mocked(removeHabitCompletion).mockRejectedValue(dbError);
 
       await expect(deleteHabit(habitId, false, {})).rejects.toThrow(
         'Database error'
@@ -429,7 +439,7 @@ describe('habitActions', () => {
 
     it('should handle unexpected errors', async () => {
       const unexpectedError = new Error('Unexpected error');
-      (removeHabit as Mock).mockRejectedValue(unexpectedError);
+      vi.mocked(removeHabit).mockRejectedValue(unexpectedError);
 
       await expect(deleteHabit(habitId, false, {})).rejects.toThrow(
         'An unexpected error occurred while removing the habit.'
@@ -443,7 +453,7 @@ describe('habitActions', () => {
 
     it('should always redirect when withRedirection is true, even after errors', async () => {
       const error = new Error('Test error');
-      (removeHabit as Mock).mockRejectedValue(error);
+      vi.mocked(removeHabit).mockRejectedValue(error);
 
       await expect(deleteHabit(habitId, true, {})).rejects.toThrow();
 
