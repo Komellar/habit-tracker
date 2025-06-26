@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 
-import { CreateEditHabitForm } from '@/components/features/habit/create-edit-habit-form';
+import { CreateEditHabitForm } from '@/components/features/habit';
 import { Button } from '@/components/ui/button';
 import { getHabitById } from '@/db/habitDb';
 

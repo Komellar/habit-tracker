@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useActionState } from 'react';
 
 import { addHabitCompletion } from '@/actions/habitCompletionActions';
-import { DeleteHabitButton } from '@/components/features/habit/delete-habit-btn';
+import { DeleteHabitButton } from '@/components/features/habit';
 import { Button } from '@/components/ui/button';
 import { Habit, HabitCompletion } from '@/prisma';
 import { BG_COLOR_MAP, COLORS } from '@/utils/colors';

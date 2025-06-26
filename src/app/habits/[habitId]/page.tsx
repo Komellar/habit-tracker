@@ -1,10 +1,13 @@
 import { notFound } from 'next/navigation';
 
-import { CompletionCalendar } from '@/components/features/habit-details/completion-calendar';
-import { HabitMetadata } from '@/components/features/habit-details/habit-metadata';
-import { StatsCards } from '@/components/features/habit-details/stats-cards';
-import { TopRow } from '@/components/features/habit-details/top-row';
-import { getHabitById, getHabitCompletions } from '@/db/habitDb';
+import {
+  CompletionCalendar,
+  HabitMetadata,
+  StatsCards,
+  TopRow,
+} from '@/components/features/habit-details';
+import { getHabitCompletions } from '@/db/habitCompletionDb';
+import { getHabitById } from '@/db/habitDb';
 
 interface Props {
   params: Promise<{ habitId: string }>;

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { DeleteHabitButton } from '@/components/features/habit/delete-habit-btn';
+import { DeleteHabitButton } from '@/components/features/habit';
 import { BG_COLOR_MAP, ColorKey } from '@/utils/colors';
 
 interface Props {
