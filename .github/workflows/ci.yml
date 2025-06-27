@@ -27,8 +27,12 @@ jobs:
       - name: Setup database
         run: |
           echo "DATABASE_URL=file:./dev.db" > .env
-          npx prisma migrate reset --force
-
+          # Generate Prisma client first
+          npx prisma generate
+          # Create the database and apply migrations
+          npx prisma migrate dev --name init --create-only
+          # Now run the seed script
+          npx prisma db seed
       - name: Run linting
         run: npm run lint
 
