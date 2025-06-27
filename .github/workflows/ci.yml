@@ -27,10 +27,7 @@ jobs:
       - name: Setup database
         run: |
           echo "DATABASE_URL=file:./dev.db" > .env
-          # Generate Prisma client first
-          npx prisma generate
-          # Reset database (drops, creates, migrates, and seeds in one command)
-          npx prisma migrate reset --force
+          npx prisma generate db seed
         env:
           DATABASE_URL: 'file:./dev.db'
 
