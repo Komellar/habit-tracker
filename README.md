@@ -39,16 +39,22 @@ npm install
 DATABASE_URL=file:dev.db
 ```
 
-3. Seed the database with initial data
+3. Push the database
+
+```bash
+npx prisma db push
+```
+
+4. Seed the database with initial data
 
 ```bash
 npx prisma db seed
 ```
 
-4. Start the development server
+5. Start the development server
 
 ```bash
 npm run dev
 ```
 
-5. Open http://localhost:3000 with your browser to see the application.
+6. Open http://localhost:3000 with your browser to see the application.
