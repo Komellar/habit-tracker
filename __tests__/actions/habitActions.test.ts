@@ -67,7 +67,12 @@ describe('habitActions', () => {
         data: validatedData,
       });
 
-      await createHabit({}, mockFormData);
+      await createHabit(
+        {
+          fields: {},
+        },
+        mockFormData
+      );
 
       expect(createUpdateHabitSchema.safeParse).toHaveBeenCalledWith({
         title: 'Test Habit',
@@ -97,7 +102,7 @@ describe('habitActions', () => {
         data: validatedData,
       });
 
-      await createHabit({}, mockFormData);
+      await createHabit({ fields: {} }, mockFormData);
 
       expect(createUpdateHabitSchema.safeParse).toHaveBeenCalledWith({
         title: 'Test Habit',
@@ -134,7 +139,7 @@ describe('habitActions', () => {
         error: zodError,
       });
 
-      const result = await createHabit({}, mockFormData);
+      const result = await createHabit({ fields: {} }, mockFormData);
 
       expect(result).toEqual({
         errors: {
@@ -173,7 +178,7 @@ describe('habitActions', () => {
       );
       vi.mocked(addHabit).mockRejectedValue(dbError);
 
-      await expect(createHabit({}, mockFormData)).rejects.toThrow(
+      await expect(createHabit({ fields: {} }, mockFormData)).rejects.toThrow(
         'Database error'
       );
 
@@ -198,7 +203,7 @@ describe('habitActions', () => {
       const unexpectedError = new Error('Unexpected error');
       vi.mocked(addHabit).mockRejectedValue(unexpectedError);
 
-      await expect(createHabit({}, mockFormData)).rejects.toThrow(
+      await expect(createHabit({ fields: {} }, mockFormData)).rejects.toThrow(
         'An unexpected error occurred while creating the habit.'
       );
 
@@ -230,7 +235,7 @@ describe('habitActions', () => {
         data: validatedData,
       });
 
-      await updateHabit(habitId, {}, mockFormData);
+      await updateHabit(habitId, { fields: {} }, mockFormData);
 
       expect(createUpdateHabitSchema.safeParse).toHaveBeenCalledWith({
         title: 'Updated Habit',
@@ -260,7 +265,7 @@ describe('habitActions', () => {
         data: validatedData,
       });
 
-      await updateHabit(habitId, {}, mockFormData);
+      await updateHabit(habitId, { fields: {} }, mockFormData);
 
       expect(createUpdateHabitSchema.safeParse).toHaveBeenCalledWith({
         title: 'Updated Habit',
@@ -299,7 +304,7 @@ describe('habitActions', () => {
         error: zodError,
       });
 
-      const result = await updateHabit(habitId, {}, mockFormData);
+      const result = await updateHabit(habitId, { fields: {} }, mockFormData);
 
       expect(result).toEqual({
         errors: {
@@ -338,9 +343,9 @@ describe('habitActions', () => {
       );
       vi.mocked(editHabit).mockRejectedValue(dbError);
 
-      await expect(updateHabit(habitId, {}, mockFormData)).rejects.toThrow(
-        'Database error'
-      );
+      await expect(
+        updateHabit(habitId, { fields: {} }, mockFormData)
+      ).rejects.toThrow('Database error');
 
       expect(console.error).toHaveBeenCalledWith(
         'Error updating habit:',
@@ -363,7 +368,9 @@ describe('habitActions', () => {
       const unexpectedError = new Error('Unexpected error');
       vi.mocked(editHabit).mockRejectedValue(unexpectedError);
 
-      await expect(updateHabit(habitId, {}, mockFormData)).rejects.toThrow(
+      await expect(
+        updateHabit(habitId, { fields: {} }, mockFormData)
+      ).rejects.toThrow(
         'An unexpected error occurred while updating the habit.'
       );
 

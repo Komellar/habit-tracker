@@ -56,11 +56,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Setup environment
-        run: echo "DATABASE_URL=file:./dev.db" > .env
-
       - name: Build application
         run: npm run build
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
