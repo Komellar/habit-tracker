@@ -23,13 +23,11 @@ export const InfoBanner = ({ totalHabits, doneToday }: Props) => {
           </svg>
           <span className='font-bold align-middle'>Amazing job!</span>
         </span>
-        <div>
-          <span className='block text-neutral-200 text-sm'>
-            You&apos;ve completed{' '}
-            <span className='font-bold'>all {totalHabits}</span> habits today.
-            Perfect streak! 🔥
-          </span>
-        </div>
+        <span className='block text-neutral-200 text-sm mt-1'>
+          You&apos;ve completed{' '}
+          <span className='font-bold'>all {totalHabits}</span> habits today.
+          Perfect streak! 🔥
+        </span>
       </div>
     );
   }
@@ -52,13 +50,11 @@ export const InfoBanner = ({ totalHabits, doneToday }: Props) => {
         </svg>
         <span className='font-bold align-middle'>Keep it up!</span>
       </span>
-      <div>
-        <span className='block text-neutral-200 text-sm'>
-          You&apos;ve completed <span className='font-bold'>{doneToday}</span>{' '}
-          out of <span className='font-bold'>{totalHabits}</span> habits today.
-          Every step counts! 🌱
-        </span>
-      </div>
+      <span className='block text-neutral-200 text-sm mt-1'>
+        You&apos;ve completed <span className='font-bold'>{doneToday}</span> out
+        of <span className='font-bold'>{totalHabits}</span> habits today. Every
+        step counts! 🌱
+      </span>
     </div>
   );
 };

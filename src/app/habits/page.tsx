@@ -16,7 +16,7 @@ export default async function HabitsPage() {
   const doneToday = getCompletedToday(allCompletedDates);
 
   return (
-    <main className='min-h-screen bg-neutral-950 text-white px-4 py-8 relative'>
+    <main className='min-h-[calc(100vh - 65)] bg-neutral-950 text-white px-4 py-8 relative'>
       <InfoBanner totalHabits={totalHabits} doneToday={doneToday} />
       <StatsCards doneToday={doneToday} habits={habits} />
       <section>

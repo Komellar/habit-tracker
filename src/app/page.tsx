@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function Home() {
   return (
-    <main className='flex flex-col items-center justify-center min-h-[calc(100vh)] px-4 bg-gradient-to-b from-neutral-950 to-neutral-900'>
+    <main className='flex flex-col items-center justify-center min-h-[calc(100vh - 65)] px-4 bg-gradient-to-b from-neutral-950 to-neutral-900'>
       <div className='max-w-4xl w-full text-center'>
         <div className='mb-12'>
           <div className='inline-block p-2 bg-indigo-900/30 rounded-full mb-6'>
