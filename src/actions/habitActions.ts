@@ -45,8 +45,10 @@ export async function createHabit(
     const color = formData.get('color') as string;
 
     const data = {
-      title: trimValue(title),
-      description: description ? trimValue(description) : undefined,
+      title: title ? trimValue(title) || undefined : undefined,
+      description: description
+        ? trimValue(description) || undefined
+        : undefined,
       goal: goal ? Number(goal) : undefined,
       color: color as ColorKey,
     };
@@ -92,8 +94,10 @@ export async function updateHabit(
     const color = formData.get('color') as string;
 
     const data = {
-      title: trimValue(title),
-      description: description ? trimValue(description) : undefined,
+      title: title ? trimValue(title) || undefined : undefined,
+      description: description
+        ? trimValue(description) || undefined
+        : undefined,
       goal: goal ? Number(goal) : undefined,
       color: color as ColorKey,
     };
