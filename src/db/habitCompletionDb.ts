@@ -18,8 +18,8 @@ export async function createHabitCompletion(habitId: string, date: Date) {
   });
 }
 
-export async function removeHabitCompletion(id: string) {
-  return prisma.habitCompletion.delete({
+export async function removeHabitCompletions(id: string) {
+  return prisma.habitCompletion.deleteMany({
     where: { id },
   });
 }

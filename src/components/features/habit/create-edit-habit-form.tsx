@@ -84,7 +84,8 @@ export const CreateEditHabitForm = ({ habit }: Props) => {
               type='number'
               min={1}
               defaultValue={state.fields.goal}
-              placeholder='e.g., 8 glasses of water, 30 minutes of exercise'
+              placeholder='Enter a numeric goal (e.g., 8, 30, 10000)'
+              max={9999}
               className='w-full bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-500'
             />
             {state.errors?.goal && (

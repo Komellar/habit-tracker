@@ -4,7 +4,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ZodError } from 'zod';
 
 import { createHabit, deleteHabit, updateHabit } from '@/actions/habitActions';
-import { removeHabitCompletion } from '@/db/habitCompletionDb';
+import { removeHabitCompletions } from '@/db/habitCompletionDb';
 import { addHabit, editHabit, removeHabit } from '@/db/habitDb';
 import { createUpdateHabitSchema } from '@/models/habit';
 import { Prisma } from '@/prisma';
@@ -28,7 +28,7 @@ vi.mock('@/db/habitDb', () => ({
 }));
 
 vi.mock('@/db/habitCompletionDb', () => ({
-  removeHabitCompletion: vi.fn(),
+  removeHabitCompletions: vi.fn(),
 }));
 
 vi.mock('@/models/habit', () => ({
@@ -381,7 +381,7 @@ describe('habitActions', () => {
       await deleteHabit(habitId, false, {});
 
       expect(removeHabit).toHaveBeenCalledWith(habitId);
-      expect(removeHabitCompletion).toHaveBeenCalledWith(habitId);
+      expect(removeHabitCompletions).toHaveBeenCalledWith(habitId);
 
       expect(revalidatePath).toHaveBeenCalledWith('/habits');
 
@@ -392,7 +392,7 @@ describe('habitActions', () => {
       await deleteHabit(habitId, true, {});
 
       expect(removeHabit).toHaveBeenCalledWith(habitId);
-      expect(removeHabitCompletion).toHaveBeenCalledWith(habitId);
+      expect(removeHabitCompletions).toHaveBeenCalledWith(habitId);
 
       expect(revalidatePath).toHaveBeenCalledWith('/habits');
 
@@ -415,15 +415,15 @@ describe('habitActions', () => {
         expect.any(Error)
       );
 
-      expect(removeHabitCompletion).not.toHaveBeenCalled();
+      expect(removeHabitCompletions).not.toHaveBeenCalled();
     });
 
-    it('should handle database errors from removeHabitCompletion', async () => {
+    it('should handle database errors from removeHabitCompletions', async () => {
       const dbError = new Prisma.PrismaClientKnownRequestError(
         'Database error',
         { code: 'P2002', clientVersion: '4.0.0' }
       );
-      vi.mocked(removeHabitCompletion).mockRejectedValue(dbError);
+      vi.mocked(removeHabitCompletions).mockRejectedValue(dbError);
 
       await expect(deleteHabit(habitId, false, {})).rejects.toThrow(
         'Database error'

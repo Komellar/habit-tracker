@@ -3,10 +3,11 @@
 import { revalidatePath } from 'next/cache';
 import { redirect, RedirectType } from 'next/navigation';
 
-import { removeHabitCompletion } from '@/db/habitCompletionDb';
+import { removeHabitCompletions } from '@/db/habitCompletionDb';
 import { addHabit, editHabit, removeHabit } from '@/db/habitDb';
 import { createUpdateHabitSchema } from '@/models/habit';
 import { ColorKey } from '@/utils/colors';
+import { trimValue } from '@/utils/common';
 
 import { Prisma } from '../../generated/prisma';
 
@@ -30,18 +31,22 @@ interface FormState {
 }
 
 export async function createHabit(
-  _prevState: unknown,
-  formData: FormData
+  _prevState: FormState,
+  formData: unknown
 ): Promise<FormState> {
+  if (!(formData instanceof FormData)) {
+    throw new Error('Invalid form data');
+  }
+
   try {
     const title = formData.get('title') as string;
-    const description = formData.get('description') as string;
+    const description = formData.get('description') as string | null;
     const goal = formData.get('goal') as string | null;
     const color = formData.get('color') as string;
 
     const data = {
-      title: title.length ? title : undefined,
-      description: description.length ? description : undefined,
+      title: trimValue(title),
+      description: description ? trimValue(description) : undefined,
       goal: goal ? Number(goal) : undefined,
       color: color as ColorKey,
     };
@@ -50,7 +55,6 @@ export async function createHabit(
 
     if (!result.success) {
       const errors: Errors = {};
-
       result.error.errors.forEach((err) => {
         if (err.path[0] && typeof err.path[0] === 'string') {
           errors[err.path[0] as keyof Errors] = err.message;
@@ -74,18 +78,22 @@ export async function createHabit(
 
 export async function updateHabit(
   habitId: string,
-  _prevState: unknown,
-  formData: FormData
+  _prevState: FormState,
+  formData: unknown
 ): Promise<FormState> {
+  if (!(formData instanceof FormData)) {
+    throw new Error('Invalid form data');
+  }
+
   try {
     const title = formData.get('title') as string;
-    const description = formData.get('description') as string;
+    const description = formData.get('description') as string | null;
     const goal = formData.get('goal') as string | null;
     const color = formData.get('color') as string;
 
     const data = {
-      title: title.length ? title : undefined,
-      description: description.length ? description : undefined,
+      title: trimValue(title),
+      description: description ? trimValue(description) : undefined,
       goal: goal ? Number(goal) : undefined,
       color: color as ColorKey,
     };
@@ -94,7 +102,6 @@ export async function updateHabit(
 
     if (!result.success) {
       const errors: Errors = {};
-
       result.error.errors.forEach((err) => {
         if (err.path[0] && typeof err.path[0] === 'string') {
           errors[err.path[0] as keyof Errors] = err.message;
@@ -123,7 +130,7 @@ export async function deleteHabit(
 ) {
   try {
     await removeHabit(habitId);
-    await removeHabitCompletion(habitId);
+    await removeHabitCompletions(habitId);
     revalidatePath('/habits');
   } catch (error) {
     console.error('Error removing habit:', error);

@@ -19,10 +19,8 @@ export const CompletionCalendar = ({ completedDates, habitColor }: Props) => {
         className='rounded-lg border border-neutral-800 bg-neutral-900 text-white'
         modifiers={{
           completed: (date) => {
-            const nextDay = new Date(date);
-            nextDay.setDate(nextDay.getDate() + 1);
-
-            return completedDateStrings.includes(formatDate(nextDay));
+            const day = new Date(date);
+            return completedDateStrings.includes(formatDate(day));
           },
         }}
         modifiersClassNames={{

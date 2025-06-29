@@ -11,6 +11,6 @@ export const createUpdateHabitSchema = z.object({
     .string()
     .max(500, 'Description must be less than 500 characters')
     .optional(),
-  goal: z.number().int().positive().optional(),
+  goal: z.number().int().positive().max(9999).optional(),
   color: z.enum(COLOR_KEYS),
 });
