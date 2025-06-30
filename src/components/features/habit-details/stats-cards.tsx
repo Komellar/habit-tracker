@@ -1,5 +1,5 @@
 import { Habit, HabitCompletion } from '@/prisma';
-import { getCurrentStreak, getSuccessRate } from '@/utils/habitDetails/stats';
+import { getCurrentStreak, getSuccessRate } from '@/utils/habit-details/stats';
 
 interface Props {
   habit: Habit;

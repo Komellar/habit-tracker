@@ -1,7 +1,7 @@
 'use client';
 import { useState, useActionState } from 'react';
 
-import { createHabit, updateHabit } from '@/actions/habitActions';
+import { createHabit, updateHabit } from '@/actions/habit-actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -31,7 +31,7 @@ export const CreateEditHabitForm = ({ habit }: Props) => {
   });
 
   return (
-    <main className='min-h-[calc(100vh - 65)] bg-neutral-950 text-white flex items-center justify-center px-4 py-8'>
+    <main className='min-h-[calc(100vh-65px)] bg-neutral-950 text-white flex items-center justify-center px-4 py-8'>
       <div className='w-full max-w-md bg-neutral-900 text-white rounded-xl shadow-lg p-6 sm:p-8 border border-neutral-800'>
         <h1 className='text-2xl font-bold text-center text-indigo-400 mb-6'>
           {habit ? 'Edit habit' : 'Create a New Habit'}

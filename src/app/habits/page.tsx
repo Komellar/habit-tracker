@@ -5,8 +5,11 @@ import {
   InfoBanner,
   StatsCards,
 } from '@/components/features/habits-list';
-import { getHabits } from '@/db/habitDb';
-import { getAllCompletedDays, getCompletedToday } from '@/utils/completedDates';
+import { getHabits } from '@/db/habit-db';
+import {
+  getAllCompletedDays,
+  getCompletedToday,
+} from '@/utils/completed-dates';
 
 export default async function HabitsPage() {
   const habits = await getHabits();
@@ -16,7 +19,7 @@ export default async function HabitsPage() {
   const doneToday = getCompletedToday(allCompletedDates);
 
   return (
-    <main className='min-h-[calc(100vh - 65)] bg-neutral-950 text-white px-4 py-8 relative'>
+    <main className='min-h-[calc(100vh-65px)] bg-neutral-950 text-white px-4 py-8 relative'>
       <InfoBanner totalHabits={totalHabits} doneToday={doneToday} />
       <StatsCards doneToday={doneToday} habits={habits} />
       <section>

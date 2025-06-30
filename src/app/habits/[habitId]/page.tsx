@@ -6,8 +6,8 @@ import {
   StatsCards,
   TopRow,
 } from '@/components/features/habit-details';
-import { getHabitCompletions } from '@/db/habitCompletionDb';
-import { getHabitById } from '@/db/habitDb';
+import { getHabitCompletions } from '@/db/habit-completion-db';
+import { getHabitById } from '@/db/habit-db';
 
 interface Props {
   params: Promise<{ habitId: string }>;
@@ -22,7 +22,7 @@ export default async function HabitDetailPage({ params }: Props) {
   const completedDates = completions.map((c) => c.date);
 
   return (
-    <main className='min-h-[calc(100vh - 65)] bg-neutral-950 text-white px-4 py-8'>
+    <main className='min-h-[calc(100vh-65px)] bg-neutral-950 text-white px-4 py-8'>
       <div className='max-w-2xl mx-auto'>
         <TopRow habitId={habit.id} title={habit.title} color={habit.color} />
         <HabitMetadata

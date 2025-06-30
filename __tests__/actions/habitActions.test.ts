@@ -3,11 +3,11 @@ import { redirect } from 'next/navigation';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ZodError } from 'zod';
 
-import { createHabit, deleteHabit, updateHabit } from '@/actions/habitActions';
-import { removeHabitCompletions } from '@/db/habitCompletionDb';
-import { addHabit, editHabit, removeHabit } from '@/db/habitDb';
-import { createUpdateHabitSchema } from '@/models/habit';
+import { createHabit, deleteHabit, updateHabit } from '@/actions/habit-actions';
+import { removeHabitCompletions } from '@/db/habit-completion-db';
+import { addHabit, editHabit, removeHabit } from '@/db/habit-db';
 import { Prisma } from '@/prisma';
+import { createUpdateHabitSchema } from '@/schemas/habit';
 import { ColorKey } from '@/utils/colors';
 
 vi.mock('next/cache', () => ({

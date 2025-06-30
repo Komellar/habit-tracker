@@ -1,7 +1,10 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 import { Habit, HabitCompletion } from '@/prisma';
-import { getAllCompletedDays, getCompletedToday } from '@/utils/completedDates';
+import {
+  getAllCompletedDays,
+  getCompletedToday,
+} from '@/utils/completed-dates';
 import { formatDate } from '@/utils/dates';
 
 describe('utils/completedDates', () => {

@@ -1,5 +1,5 @@
 import { Habit, HabitCompletion } from '@/prisma';
-import { getSuccessRate } from '@/utils/habitDetails/stats';
+import { getSuccessRate } from '@/utils/habit-details/stats';
 
 interface Props {
   doneToday: number;
