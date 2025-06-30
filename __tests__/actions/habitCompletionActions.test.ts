@@ -1,12 +1,12 @@
 import { revalidatePath } from 'next/cache';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-import { addHabitCompletion } from '@/actions/habitCompletionActions';
+import { addHabitCompletion } from '@/actions/habit-completion-actions';
 import {
   createHabitCompletion,
   getHabitCompletions,
-} from '@/db/habitCompletionDb';
-import { editHabit } from '@/db/habitDb';
+} from '@/db/habit-completion-db';
+import { editHabit } from '@/db/habit-db';
 import { Prisma } from '@/prisma';
 
 // Mock dependencies

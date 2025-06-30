@@ -4,7 +4,7 @@ export const dynamic = 'force-static';
 
 export default function AboutPage() {
   return (
-    <main className='min-h-[calc(100vh - 65)] bg-gradient-to-b from-neutral-950 to-neutral-900 px-4 py-16'>
+    <main className='min-h-[calc(100vh-65px)] bg-gradient-to-b from-neutral-950 to-neutral-900 px-4 py-16'>
       <div className='max-w-4xl mx-auto'>
         {/* Header Section */}
         <div className='mb-16 text-center'>

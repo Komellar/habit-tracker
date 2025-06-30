@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 import { HabitCompletion } from '@/prisma';
-import { getCurrentStreak, getSuccessRate } from '@/utils/habitDetails/stats';
+import { getCurrentStreak, getSuccessRate } from '@/utils/habit-details/stats';
 
 describe('habitDetails stats utils', () => {
   const RealDate = global.Date;

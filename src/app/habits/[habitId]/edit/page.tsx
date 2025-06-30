@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 
 import { CreateEditHabitForm } from '@/components/features/habit';
 import { Button } from '@/components/ui/button';
-import { getHabitById } from '@/db/habitDb';
+import { getHabitById } from '@/db/habit-db';
 
 interface Props {
   params: Promise<{
@@ -17,7 +17,7 @@ export default async function EditHabitPage({ params }: Props) {
 
   if (!habit) {
     return (
-      <main className='min-h-[calc(100vh - 65)] bg-neutral-950 text-white flex items-center justify-center px-4 py-8'>
+      <main className='min-h-[calc(100vh-65px)] bg-neutral-950 text-white flex items-center justify-center px-4 py-8'>
         <div className='text-center'>
           <h1 className='text-2xl font-bold text-red-400 mb-4'>
             Habit not found

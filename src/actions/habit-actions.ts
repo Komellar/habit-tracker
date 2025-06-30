@@ -3,9 +3,9 @@
 import { revalidatePath } from 'next/cache';
 import { redirect, RedirectType } from 'next/navigation';
 
-import { removeHabitCompletions } from '@/db/habitCompletionDb';
-import { addHabit, editHabit, removeHabit } from '@/db/habitDb';
-import { createUpdateHabitSchema } from '@/models/habit';
+import { removeHabitCompletions } from '@/db/habit-completion-db';
+import { addHabit, editHabit, removeHabit } from '@/db/habit-db';
+import { createUpdateHabitSchema } from '@/schemas/habit';
 import { ColorKey } from '@/utils/colors';
 import { trimValue } from '@/utils/common';
 
