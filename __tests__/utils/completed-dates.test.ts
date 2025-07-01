@@ -7,7 +7,7 @@ import {
 } from '@/utils/completed-dates';
 import { formatDate } from '@/utils/dates';
 
-describe('utils/completedDates', () => {
+describe('utils/completed-dates', () => {
   const RealDate = global.Date;
 
   beforeEach(() => {

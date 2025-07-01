@@ -4,14 +4,20 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import prisma from '@/lib/db';
-import { signUpSchema } from '@/schemas/auth';
-import { generateSalt, hashPassword } from '@/utils/auth/hashPassword';
-import { createUserSession } from '@/utils/auth/session';
+import { signInSchema, signUpSchema } from '@/schemas/auth';
+import {
+  comparePasswords,
+  generateSalt,
+  hashPassword,
+} from '@/utils/auth/hashPassword';
+import { createUserSession, removeUserFromSession } from '@/utils/auth/session';
+import { handleZodErrors } from '@/utils/formHelpers';
 
 interface Errors {
   email?: string;
   password?: string;
   name?: string;
+  global?: string;
 }
 
 interface Fields {
@@ -25,26 +31,55 @@ interface FormState {
   errors?: Errors;
 }
 
-// export async function signInUser(email: string, password: string) {
-//   try {
-//     const response = await fetch('/api/auth/signin', {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify({ email, password }),
-//     });
+export async function signInUser(
+  _prevState: FormState,
+  formData: FormData
+): Promise<FormState> {
+  if (!(formData instanceof FormData)) {
+    throw new Error('Invalid form data');
+  }
 
-//     if (!response.ok) {
-//       throw new Error('Failed to sign in');
-//     }
+  const fields = Object.fromEntries(formData.entries());
+  const { data, success, error } = signInSchema.safeParse(fields);
 
-//     return await response.json();
-//   } catch (error) {
-//     console.error('Error signing in:', error);
-//     throw error;
-//   }
-// }
+  if (!success) {
+    return handleZodErrors(error, fields);
+  }
+
+  const { email, password } = data;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (user == null) {
+      return {
+        errors: { global: 'Unable to log in' },
+        fields,
+      };
+    }
+
+    const isCorrectPassword = await comparePasswords({
+      password,
+      hashedPassword: user.password,
+      salt: user.salt,
+    });
+
+    if (!isCorrectPassword) {
+      return {
+        errors: { global: 'Incorrect email or password' },
+        fields,
+      };
+    }
+
+    await createUserSession({ id: user.id, role: user.role }, await cookies());
+  } catch (error) {
+    console.error('Error signing up:', error);
+    throw error;
+  }
+  redirect('/habits');
+}
 
 export async function signUpUser(
   _prevState: FormState,
@@ -59,13 +94,7 @@ export async function signUpUser(
   const { data, success, error } = signUpSchema.safeParse(fields);
 
   if (!success) {
-    const errors: Errors = {};
-    error.errors.forEach((err) => {
-      if (err.path[0] && typeof err.path[0] === 'string') {
-        errors[err.path[0] as keyof Errors] = err.message;
-      }
-    });
-    return { errors, fields };
+    return handleZodErrors(error, fields);
   }
 
   const { email, password } = data;
@@ -75,7 +104,7 @@ export async function signUpUser(
       where: { email },
     });
 
-    if (existingUser !== null) {
+    if (existingUser != null) {
       return {
         errors: { email: 'Email already exists' },
         fields,
@@ -96,17 +125,25 @@ export async function signUpUser(
 
     if (!user) {
       return {
-        errors: { email: 'Failed to create user' },
+        errors: { global: 'Failed to create user' },
         fields,
       };
     }
 
     await createUserSession({ id: user.id, role: user.role }, await cookies());
-
-    console.log(hashedPassword);
   } catch (error) {
     console.error('Error signing up:', error);
     throw error;
   }
   redirect('/habits');
+}
+
+export async function signOutUser() {
+  try {
+    await removeUserFromSession(await cookies());
+  } catch (error) {
+    console.error('Error signing out:', error);
+    throw error;
+  }
+  redirect('/sign-in');
 }

@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { HabitCompletion } from '@/prisma';
 import { getCurrentStreak, getSuccessRate } from '@/utils/habit-details/stats';
 
-describe('habitDetails stats utils', () => {
+describe('utils/habit-details/stats', () => {
   const RealDate = global.Date;
 
   beforeEach(() => {

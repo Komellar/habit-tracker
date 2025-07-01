@@ -10,7 +10,6 @@ import { Label } from '@/components/ui/label';
 
 export const SignUpForm = () => {
   const [state, action, isLoading] = useActionState(signUpUser, {
-    // errors: {},
     fields: {},
   });
 
@@ -20,11 +19,11 @@ export const SignUpForm = () => {
         Create Account
       </h1>
 
-      {/* {state?.errors && (
+      {state?.errors?.global && (
         <div className='bg-red-900/30 border border-red-800 text-red-200 px-4 py-3 rounded-md mb-6'>
-          {state?.errors}
+          {state?.errors.global}
         </div>
-      )} */}
+      )}
 
       <form action={action} className='space-y-5'>
         <div className='space-y-2'>
@@ -39,6 +38,7 @@ export const SignUpForm = () => {
             required
             className='w-full bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-500'
             disabled={isLoading}
+            defaultValue={state?.fields?.name || ''}
           />
         </div>
 
@@ -54,6 +54,7 @@ export const SignUpForm = () => {
             required
             className='w-full bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-500'
             disabled={isLoading}
+            defaultValue={state?.fields?.email || ''}
           />
           {state?.errors?.email && (
             <p className='text-sm text-red-400'>{state.errors.email}</p>
@@ -73,6 +74,7 @@ export const SignUpForm = () => {
             minLength={8}
             className='w-full bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-500'
             disabled={isLoading}
+            defaultValue={state?.fields?.password || ''}
           />
           {state?.errors?.password && (
             <p className='text-sm text-red-400'>{state.errors.password}</p>
@@ -115,7 +117,7 @@ export const SignUpForm = () => {
         <div className='text-center text-neutral-400 text-sm mt-6'>
           Already have an account?{' '}
           <Link
-            href='/signin'
+            href='/sign-in'
             className='text-indigo-400 hover:text-indigo-300'
           >
             Sign in
