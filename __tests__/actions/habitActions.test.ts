@@ -21,23 +21,23 @@ vi.mock('next/navigation', () => ({
   },
 }));
 
-vi.mock('@/db/habitDb', () => ({
+vi.mock('@/db/habit-db', () => ({
   addHabit: vi.fn(),
   editHabit: vi.fn(),
   removeHabit: vi.fn(),
 }));
 
-vi.mock('@/db/habitCompletionDb', () => ({
+vi.mock('@/db/habit-completion-db', () => ({
   removeHabitCompletions: vi.fn(),
 }));
 
-vi.mock('@/models/habit', () => ({
+vi.mock('@/schemas/habit', () => ({
   createUpdateHabitSchema: {
     safeParse: vi.fn(),
   },
 }));
 
-describe('habitActions', () => {
+describe('actions/habit-actions', () => {
   let mockFormData: FormData;
 
   beforeEach(() => {

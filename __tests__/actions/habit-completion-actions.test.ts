@@ -14,16 +14,16 @@ vi.mock('next/cache', () => ({
   revalidatePath: vi.fn(),
 }));
 
-vi.mock('@/db/habitCompletionDb', () => ({
+vi.mock('@/db/habit-completion-db', () => ({
   createHabitCompletion: vi.fn(),
   getHabitCompletions: vi.fn(),
 }));
 
-vi.mock('@/db/habitDb', () => ({
+vi.mock('@/db/habit-db', () => ({
   editHabit: vi.fn(),
 }));
 
-describe('habitCompletionActions', () => {
+describe('actions/habit-completion-actions', () => {
   const habitId = 'test-habit-id';
 
   beforeEach(() => {

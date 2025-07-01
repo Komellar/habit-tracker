@@ -1,25 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useActionState } from 'react';
 
+import { signInUser } from '@/actions/auth-actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 export const SignInForm = () => {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    // Here you would implement your authentication logic
-    // For now, we'll just simulate a loading state
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-  };
+  const [state, action, isLoading] = useActionState(signInUser, {
+    fields: {},
+  });
 
   return (
     <div className='w-full max-w-md bg-neutral-900 text-white rounded-xl shadow-lg p-6 sm:p-8 border border-neutral-800'>
@@ -27,7 +19,13 @@ export const SignInForm = () => {
         Sign In
       </h1>
 
-      <form onSubmit={handleSubmit} className='space-y-5'>
+      {state?.errors?.global && (
+        <div className='bg-red-900/30 border border-red-800 text-red-200 px-4 py-3 rounded-md mb-6'>
+          {state?.errors.global}
+        </div>
+      )}
+
+      <form action={action} className='space-y-5'>
         <div className='space-y-2'>
           <Label htmlFor='email' className='font-medium text-neutral-200'>
             Email
@@ -39,7 +37,11 @@ export const SignInForm = () => {
             placeholder='your.email@example.com'
             required
             className='w-full bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-500'
+            defaultValue={state?.fields?.email || ''}
           />
+          {state?.errors?.email && (
+            <p className='text-sm text-red-400'>{state.errors.email}</p>
+          )}
         </div>
 
         <div className='space-y-2'>
@@ -61,7 +63,11 @@ export const SignInForm = () => {
             placeholder='••••••••'
             required
             className='w-full bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-500'
+            defaultValue={state?.fields?.password || ''}
           />
+          {state?.errors?.password && (
+            <p className='text-sm text-red-400'>{state.errors.password}</p>
+          )}
         </div>
 
         <Button

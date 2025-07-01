@@ -1,8 +1,20 @@
 import Link from 'next/link';
 
+import { signOutUser } from '@/actions/auth-actions';
+import { getCurrentUser } from '@/utils/auth/currentUser';
+import { getNavLinks } from '@/utils/nav-links';
+
+import { Button } from '../ui/button';
+
 import { MobileMenuButton } from './mobile-menu-button';
 
-export function Navbar() {
+export async function Navbar() {
+  const user = await getCurrentUser({ withFullUser: true });
+  const isLoggedIn = !!user;
+  console.log('Current User:', user);
+
+  const links = getNavLinks(isLoggedIn);
+
   return (
     <nav className='bg-neutral-900 border-b border-neutral-800 py-4 px-6 sticky top-0 z-50 h-[65px]'>
       <div className='max-w-7xl mx-auto flex items-center justify-between'>
@@ -27,39 +39,29 @@ export function Navbar() {
         </Link>
 
         <div className='hidden md:flex items-center space-x-6'>
-          <Link
-            href='/sign-in'
-            className='text-neutral-200 hover:text-white transition-colors'
-          >
-            Sign in
-          </Link>
-          <Link
-            href='/sign-up'
-            className='text-neutral-200 hover:text-white transition-colors'
-          >
-            Sign up
-          </Link>
-          <Link
-            href='/habits'
-            className='text-neutral-200 hover:text-white transition-colors'
-          >
-            My Habits
-          </Link>
-          <Link
-            href='/habits/create'
-            className='text-neutral-200 hover:text-white transition-colors'
-          >
-            Create Habit
-          </Link>
-          <Link
-            href='/about'
-            className='text-neutral-200 hover:text-white transition-colors'
-          >
-            About
-          </Link>
-        </div>
+          {links.map((link) => {
+            if (link.label === 'Sign Out') {
+              return (
+                <form action={signOutUser} key={link.label}>
+                  <Button className='bg-neutral-800 hover:bg-neutral-700 text-neutral-200 hover:text-white px-4 py-2 rounded-md font-medium transition-colors duration-200 flex items-center gap-2'>
+                    {link.label}
+                  </Button>
+                </form>
+              );
+            }
 
-        <MobileMenuButton />
+            return (
+              <Link
+                href={link.href || '#'}
+                className='text-neutral-200 hover:text-white transition-colors'
+                key={link.label}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+        </div>
+        <MobileMenuButton links={links} />
       </div>
     </nav>
   );

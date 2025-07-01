@@ -3,7 +3,16 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
-export function MobileMenuButton() {
+import { signOutUser } from '@/actions/auth-actions';
+import { getNavLinks } from '@/utils/nav-links';
+
+import { Button } from '../ui/button';
+
+export function MobileMenuButton({
+  links,
+}: {
+  links: ReturnType<typeof getNavLinks>;
+}) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -48,27 +57,31 @@ export function MobileMenuButton() {
       {mobileMenuOpen && (
         <div className='md:hidden absolute left-0 right-0 top-[72px] bg-neutral-800 border-b border-neutral-700 shadow-lg animate-fadeIn'>
           <div className='flex flex-col p-4 space-y-3'>
-            <Link
-              href='/habits'
-              className='text-neutral-200 hover:text-white transition-colors py-2 px-4 rounded-md hover:bg-neutral-700'
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              My Habits
-            </Link>
-            <Link
-              href='/habits/create'
-              className='text-neutral-200 hover:text-white transition-colors py-2 px-4 rounded-md hover:bg-neutral-700'
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Create Habit
-            </Link>
-            <Link
-              href='/about'
-              className='text-neutral-200 hover:text-white transition-colors py-2 px-4 rounded-md hover:bg-neutral-700'
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              About
-            </Link>
+            {links.map((link) => {
+              if (link.label === 'Sign Out') {
+                return (
+                  <form action={signOutUser} key={link.label}>
+                    <Button
+                      type='submit'
+                      className='text-neutral-200 hover:text-white transition-colors py-2 px-4 rounded-md hover:bg-neutral-700 w-full'
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {link.label}
+                    </Button>
+                  </form>
+                );
+              }
+              return (
+                <Link
+                  key={link.label}
+                  href={link.href || '#'}
+                  className='text-neutral-200 hover:text-white transition-colors py-2 px-4 rounded-md hover:bg-neutral-700'
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </div>
         </div>
       )}

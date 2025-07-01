@@ -8,6 +8,7 @@ import { addHabit, editHabit, removeHabit } from '@/db/habit-db';
 import { createUpdateHabitSchema } from '@/schemas/habit';
 import { ColorKey } from '@/utils/colors';
 import { trimValue } from '@/utils/common';
+import { handleZodErrors } from '@/utils/formHelpers';
 
 import { Prisma } from '../../generated/prisma';
 
@@ -44,7 +45,7 @@ export async function createHabit(
     const goal = formData.get('goal') as string | null;
     const color = formData.get('color') as string;
 
-    const data = {
+    const fields = {
       title: title ? trimValue(title) || undefined : undefined,
       description: description
         ? trimValue(description) || undefined
@@ -53,19 +54,14 @@ export async function createHabit(
       color: color as ColorKey,
     };
 
-    const result = createUpdateHabitSchema.safeParse(data);
+    const { data, success, error } = createUpdateHabitSchema.safeParse(fields);
 
-    if (!result.success) {
-      const errors: Errors = {};
-      result.error.errors.forEach((err) => {
-        if (err.path[0] && typeof err.path[0] === 'string') {
-          errors[err.path[0] as keyof Errors] = err.message;
-        }
-      });
-      return { errors, fields: data };
+    if (!success) {
+      return handleZodErrors(error, fields);
     }
 
-    await addHabit(result.data);
+    await addHabit(data);
+    revalidatePath('/habits');
   } catch (error) {
     console.error('Error creating habit:', error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -74,7 +70,6 @@ export async function createHabit(
       throw new Error('An unexpected error occurred while creating the habit.');
     }
   }
-  revalidatePath('/habits');
   redirect('/habits');
 }
 
@@ -93,7 +88,7 @@ export async function updateHabit(
     const goal = formData.get('goal') as string | null;
     const color = formData.get('color') as string;
 
-    const data = {
+    const fields = {
       title: title ? trimValue(title) || undefined : undefined,
       description: description
         ? trimValue(description) || undefined
@@ -102,19 +97,14 @@ export async function updateHabit(
       color: color as ColorKey,
     };
 
-    const result = createUpdateHabitSchema.safeParse(data);
+    const { success, error, data } = createUpdateHabitSchema.safeParse(fields);
 
-    if (!result.success) {
-      const errors: Errors = {};
-      result.error.errors.forEach((err) => {
-        if (err.path[0] && typeof err.path[0] === 'string') {
-          errors[err.path[0] as keyof Errors] = err.message;
-        }
-      });
-      return { errors, fields: data };
+    if (!success) {
+      return handleZodErrors(error, fields);
     }
 
-    await editHabit(habitId, result.data);
+    await editHabit(habitId, data);
+    revalidatePath('/habits');
   } catch (error) {
     console.error('Error updating habit:', error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -123,7 +113,6 @@ export async function updateHabit(
       throw new Error('An unexpected error occurred while updating the habit.');
     }
   }
-  revalidatePath('/habits');
   redirect(`/habits/${habitId}`, RedirectType.replace);
 }
 
