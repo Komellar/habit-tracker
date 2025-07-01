@@ -28,6 +28,18 @@ export function Navbar() {
 
         <div className='hidden md:flex items-center space-x-6'>
           <Link
+            href='/sign-in'
+            className='text-neutral-200 hover:text-white transition-colors'
+          >
+            Sign in
+          </Link>
+          <Link
+            href='/sign-up'
+            className='text-neutral-200 hover:text-white transition-colors'
+          >
+            Sign up
+          </Link>
+          <Link
             href='/habits'
             className='text-neutral-200 hover:text-white transition-colors'
           >
