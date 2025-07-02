@@ -9,7 +9,7 @@ import {
   comparePasswords,
   generateSalt,
   hashPassword,
-} from '@/utils/auth/hashPassword';
+} from '@/utils/auth/hash-password';
 import { createUserSession, removeUserFromSession } from '@/utils/auth/session';
 import { handleZodErrors } from '@/utils/formHelpers';
 

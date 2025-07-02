@@ -17,7 +17,7 @@ export async function addHabitCompletion(
   _prevState: unknown
 ) {
   try {
-    await createHabitCompletion(habitId, new Date());
+    await createHabitCompletion({ habitId, date: new Date() });
     const completions = await getHabitCompletions(habitId);
 
     let shouldIncrementStreak = false;

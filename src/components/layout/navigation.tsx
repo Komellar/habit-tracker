@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import { signOutUser } from '@/actions/auth-actions';
-import { getCurrentUser } from '@/utils/auth/currentUser';
+import { getCurrentUser } from '@/utils/auth/current-user';
 import { getNavLinks } from '@/utils/nav-links';
 
 import { Button } from '../ui/button';
@@ -11,7 +11,6 @@ import { MobileMenuButton } from './mobile-menu-button';
 export async function Navbar() {
   const user = await getCurrentUser({ withFullUser: true });
   const isLoggedIn = !!user;
-  console.log('Current User:', user);
 
   const links = getNavLinks(isLoggedIn);
 

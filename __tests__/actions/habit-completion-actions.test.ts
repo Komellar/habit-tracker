@@ -44,10 +44,10 @@ describe('actions/habit-completion-actions', () => {
 
       await addHabitCompletion(habitId, 0, 0, {});
 
-      expect(createHabitCompletion).toHaveBeenCalledWith(
+      expect(createHabitCompletion).toHaveBeenCalledWith({
         habitId,
-        expect.any(Date)
-      );
+        date: expect.any(Date),
+      });
 
       expect(getHabitCompletions).toHaveBeenCalledWith(habitId);
 

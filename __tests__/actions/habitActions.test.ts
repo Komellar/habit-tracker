@@ -37,6 +37,13 @@ vi.mock('@/schemas/habit', () => ({
   },
 }));
 
+vi.mock('@/utils/auth/current-user', () => ({
+  getCurrentUser: () => ({
+    id: 'test-user-id',
+    role: 'user',
+  }),
+}));
+
 describe('actions/habit-actions', () => {
   let mockFormData: FormData;
 
@@ -81,7 +88,10 @@ describe('actions/habit-actions', () => {
         color: 'blue',
       });
 
-      expect(addHabit).toHaveBeenCalledWith(validatedData);
+      expect(addHabit).toHaveBeenCalledWith({
+        ...validatedData,
+        userId: 'test-user-id',
+      });
 
       expect(revalidatePath).toHaveBeenCalledWith('/habits');
       expect(redirect).toHaveBeenCalledWith('/habits');

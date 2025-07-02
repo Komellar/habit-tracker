@@ -6,6 +6,7 @@ import { redirect, RedirectType } from 'next/navigation';
 import { removeHabitCompletions } from '@/db/habit-completion-db';
 import { addHabit, editHabit, removeHabit } from '@/db/habit-db';
 import { createUpdateHabitSchema } from '@/schemas/habit';
+import { getCurrentUser } from '@/utils/auth/current-user';
 import { ColorKey } from '@/utils/colors';
 import { trimValue } from '@/utils/common';
 import { handleZodErrors } from '@/utils/formHelpers';
@@ -39,28 +40,32 @@ export async function createHabit(
     throw new Error('Invalid form data');
   }
 
+  const title = formData.get('title') as string;
+  const description = formData.get('description') as string | null;
+  const goal = formData.get('goal') as string | null;
+  const color = formData.get('color') as string;
+
+  const fields = {
+    title: title ? trimValue(title) || undefined : undefined,
+    description: description ? trimValue(description) || undefined : undefined,
+    goal: goal ? Number(goal) : undefined,
+    color: color as ColorKey,
+  };
+
+  const { data, success, error } = createUpdateHabitSchema.safeParse(fields);
+
+  if (!success) {
+    return handleZodErrors(error, fields);
+  }
+
   try {
-    const title = formData.get('title') as string;
-    const description = formData.get('description') as string | null;
-    const goal = formData.get('goal') as string | null;
-    const color = formData.get('color') as string;
+    const user = await getCurrentUser();
 
-    const fields = {
-      title: title ? trimValue(title) || undefined : undefined,
-      description: description
-        ? trimValue(description) || undefined
-        : undefined,
-      goal: goal ? Number(goal) : undefined,
-      color: color as ColorKey,
-    };
-
-    const { data, success, error } = createUpdateHabitSchema.safeParse(fields);
-
-    if (!success) {
-      return handleZodErrors(error, fields);
+    if (!user) {
+      throw new Error('User not authenticated');
     }
 
-    await addHabit(data);
+    await addHabit({ ...data, userId: user.id });
     revalidatePath('/habits');
   } catch (error) {
     console.error('Error creating habit:', error);
@@ -82,27 +87,25 @@ export async function updateHabit(
     throw new Error('Invalid form data');
   }
 
+  const title = formData.get('title') as string;
+  const description = formData.get('description') as string | null;
+  const goal = formData.get('goal') as string | null;
+  const color = formData.get('color') as string;
+
+  const fields = {
+    title: title ? trimValue(title) || undefined : undefined,
+    description: description ? trimValue(description) || undefined : undefined,
+    goal: goal ? Number(goal) : undefined,
+    color: color as ColorKey,
+  };
+
+  const { success, error, data } = createUpdateHabitSchema.safeParse(fields);
+
+  if (!success) {
+    return handleZodErrors(error, fields);
+  }
+
   try {
-    const title = formData.get('title') as string;
-    const description = formData.get('description') as string | null;
-    const goal = formData.get('goal') as string | null;
-    const color = formData.get('color') as string;
-
-    const fields = {
-      title: title ? trimValue(title) || undefined : undefined,
-      description: description
-        ? trimValue(description) || undefined
-        : undefined,
-      goal: goal ? Number(goal) : undefined,
-      color: color as ColorKey,
-    };
-
-    const { success, error, data } = createUpdateHabitSchema.safeParse(fields);
-
-    if (!success) {
-      return handleZodErrors(error, fields);
-    }
-
     await editHabit(habitId, data);
     revalidatePath('/habits');
   } catch (error) {
