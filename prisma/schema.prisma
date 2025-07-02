@@ -35,6 +35,8 @@ model Habit {
     goal        Int?
     color       HabitColor
     completions HabitCompletion[]
+    user        User              @relation(fields: [userId], references: [id])
+    userId      String
 }
 
 model HabitCompletion {
@@ -53,4 +55,5 @@ model User {
     role      UserRole @default(user)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    habits    Habit[]
 }
