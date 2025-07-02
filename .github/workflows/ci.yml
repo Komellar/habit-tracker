@@ -30,6 +30,8 @@ jobs:
           npx prisma db seed
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          REDIS_TOKEN: ${{ secrets.REDIS_TOKEN }}
+          REDIS_UR: ${{ secrets.REDIS_URL }}
 
       - name: Run linting
         run: npm run lint
@@ -59,6 +61,8 @@ jobs:
         run: npm run build
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          REDIS_TOKEN: ${{ secrets.REDIS_TOKEN }}
+          REDIS_UR: ${{ secrets.REDIS_URL }}
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
