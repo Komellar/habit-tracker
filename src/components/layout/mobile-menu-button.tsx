@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useActionState, useState } from 'react';
 
 import { signOutUser } from '@/actions/auth-actions';
 import { getNavLinks } from '@/utils/nav-links';
@@ -14,6 +14,7 @@ export function MobileMenuButton({
   links: ReturnType<typeof getNavLinks>;
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [, action, isLoading] = useActionState(signOutUser, null);
 
   return (
     <div className='md:hidden'>
@@ -60,13 +61,17 @@ export function MobileMenuButton({
             {links.map((link) => {
               if (link.label === 'Sign Out') {
                 return (
-                  <form action={signOutUser} key={link.label}>
+                  <form action={action} key={link.label}>
                     <Button
                       type='submit'
                       className='text-neutral-200 hover:text-white transition-colors py-2 px-4 rounded-md hover:bg-neutral-700 w-full'
-                      onClick={() => setMobileMenuOpen(false)}
+                      disabled={isLoading}
                     >
-                      {link.label}
+                      {isLoading ? (
+                        <div className='animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-1'></div>
+                      ) : (
+                        <p>{link.label}</p>
+                      )}
                     </Button>
                   </form>
                 );

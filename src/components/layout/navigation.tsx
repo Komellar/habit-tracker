@@ -1,12 +1,10 @@
 import Link from 'next/link';
 
-import { signOutUser } from '@/actions/auth-actions';
 import { getCurrentUser } from '@/utils/auth/current-user';
 import { getNavLinks } from '@/utils/nav-links';
 
-import { Button } from '../ui/button';
-
 import { MobileMenuButton } from './mobile-menu-button';
+import { SignOutButton } from './sign-out-button';
 
 export async function Navbar() {
   const user = await getCurrentUser({ withFullUser: true });
@@ -40,13 +38,7 @@ export async function Navbar() {
         <div className='hidden md:flex items-center space-x-6'>
           {links.map((link) => {
             if (link.label === 'Sign Out') {
-              return (
-                <form action={signOutUser} key={link.label}>
-                  <Button className='bg-neutral-800 hover:bg-neutral-700 text-neutral-200 hover:text-white px-4 py-2 rounded-md font-medium transition-colors duration-200 flex items-center gap-2'>
-                    {link.label}
-                  </Button>
-                </form>
-              );
+              return <SignOutButton key='sign-out' />;
             }
 
             return (

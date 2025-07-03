@@ -29,11 +29,30 @@ export async function editHabit(
   });
 }
 
-export async function getHabits() {
+export async function getHabits(query?: string) {
   const user = await getCurrentUser();
   if (!user) {
     throw new Error('User not found');
   }
+
+  if (query && query.trim().length) {
+    return prisma.habit.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        completions: true,
+      },
+      where: {
+        userId: user.id,
+        OR: [
+          { title: { contains: query } },
+          { description: { contains: query } },
+        ],
+      },
+    });
+  }
+
   return prisma.habit.findMany({
     orderBy: {
       createdAt: 'desc',
