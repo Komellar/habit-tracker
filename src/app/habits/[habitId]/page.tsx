@@ -6,8 +6,8 @@ import {
   StatsCards,
   TopRow,
 } from '@/components/features/habit-details';
-import { getHabitCompletions } from '@/db/habit-completion-db';
-import { getHabitById } from '@/db/habit-db';
+import { getHabitCompletions } from '@/data-access/habit-completion-db';
+import { getHabitById } from '@/data-access/habit-db';
 
 interface Props {
   params: Promise<{ habitId: string }>;

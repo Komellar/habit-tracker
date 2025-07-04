@@ -1,9 +1,8 @@
 import prisma from '@/lib/db';
+import { Prisma } from '@/prisma/client';
 import { getCurrentUser } from '@/utils/auth/current-user';
 
-import { Prisma } from '../../generated/prisma';
-
-export async function addHabit(data: Prisma.HabitCreateArgs['data']) {
+export async function addHabit(data: Prisma.HabitUncheckedCreateInput) {
   const user = await getCurrentUser();
   if (!user) {
     throw new Error('User not found');
@@ -16,7 +15,7 @@ export async function addHabit(data: Prisma.HabitCreateArgs['data']) {
 
 export async function editHabit(
   id: string,
-  data: Prisma.HabitUpdateArgs['data']
+  data: Prisma.HabitUncheckedUpdateInput
 ) {
   const user = await getCurrentUser();
   if (!user) {
@@ -29,28 +28,10 @@ export async function editHabit(
   });
 }
 
-export async function getHabits(query?: string) {
+export async function getHabits() {
   const user = await getCurrentUser();
   if (!user) {
     throw new Error('User not found');
-  }
-
-  if (query && query.trim().length) {
-    return prisma.habit.findMany({
-      orderBy: {
-        createdAt: 'desc',
-      },
-      include: {
-        completions: true,
-      },
-      where: {
-        userId: user.id,
-        OR: [
-          { title: { contains: query } },
-          { description: { contains: query } },
-        ],
-      },
-    });
   }
 
   return prisma.habit.findMany({
@@ -63,6 +44,48 @@ export async function getHabits(query?: string) {
     where: {
       userId: user.id,
     },
+  });
+}
+
+export async function getHabitsCount(search = '') {
+  const user = await getCurrentUser();
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  return await prisma.habit.count({
+    where: {
+      userId: user.id,
+      OR: [
+        { title: { contains: search } },
+        { description: { contains: search } },
+      ],
+    },
+  });
+}
+
+export async function getPaginatedHabits(search = '', page = 1, limit = 5) {
+  const user = await getCurrentUser();
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  return await prisma.habit.findMany({
+    orderBy: {
+      createdAt: 'desc',
+    },
+    include: {
+      completions: true,
+    },
+    where: {
+      userId: user.id,
+      OR: [
+        { title: { contains: search } },
+        { description: { contains: search } },
+      ],
+    },
+    skip: (page - 1) * limit,
+    take: limit,
   });
 }
 

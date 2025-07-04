@@ -1,5 +1,5 @@
 import prisma from '@/lib/db';
-import { Prisma } from '@/prisma';
+import { Prisma } from '@/prisma/client';
 
 export async function getHabitCompletions(habitId: string) {
   return prisma.habitCompletion.findMany({
@@ -11,7 +11,7 @@ export async function getHabitCompletions(habitId: string) {
 }
 
 export async function createHabitCompletion(
-  data: Prisma.HabitCompletionCreateArgs['data']
+  data: Prisma.HabitCompletionUncheckedCreateInput
 ) {
   return prisma.habitCompletion.create({
     data,

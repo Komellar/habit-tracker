@@ -3,8 +3,8 @@
 import { revalidatePath } from 'next/cache';
 import { redirect, RedirectType } from 'next/navigation';
 
-import { removeHabitCompletions } from '@/db/habit-completion-db';
-import { addHabit, editHabit, removeHabit } from '@/db/habit-db';
+import { removeHabitCompletions } from '@/data-access/habit-completion-db';
+import { addHabit, editHabit, removeHabit } from '@/data-access/habit-db';
 import { createUpdateHabitSchema } from '@/schemas/habit';
 import { getCurrentUser } from '@/utils/auth/current-user';
 import { ColorKey } from '@/utils/colors';

@@ -1,7 +1,5 @@
-export default function Loading() {
-  return (
-    <main className='min-h-screen bg-neutral-950 text-white flex items-center justify-center px-4 py-8'>
-      <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white'></div>
-    </main>
-  );
+import { LoaderLarge } from '@/components/common/loader';
+
+export default function LoadingPage() {
+  return <LoaderLarge />;
 }

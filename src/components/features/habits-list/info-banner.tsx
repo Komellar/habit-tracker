@@ -24,7 +24,7 @@ export const InfoBanner = ({ totalHabits, doneToday }: Props) => {
           <span className='font-bold align-middle'>Amazing job!</span>
         </span>
         <span className='block text-neutral-200 text-sm mt-1'>
-          You&apos;ve completed{' '}
+          You&apos;ve completed&nbsp;
           <span className='font-bold'>all {totalHabits}</span> habits today.
           Perfect streak! 🔥
         </span>

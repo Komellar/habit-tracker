@@ -81,24 +81,6 @@ export const SignUpForm = () => {
           )}
         </div>
 
-        {/* <div className='space-y-2'>
-          <Label
-            htmlFor='confirmPassword'
-            className='font-medium text-neutral-200'
-          >
-            Confirm Password
-          </Label>
-          <Input
-            id='confirmPassword'
-            name='confirmPassword'
-            type='password'
-            placeholder='••••••••'
-            required
-            className='w-full bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-500'
-            disabled={isLoading}
-          />
-        </div> */}
-
         <Button
           type='submit'
           className='w-full bg-indigo-600 hover:bg-indigo-500 text-white py-2 rounded-md transition-colors'
@@ -115,7 +97,7 @@ export const SignUpForm = () => {
         </Button>
 
         <div className='text-center text-neutral-400 text-sm mt-6'>
-          Already have an account?{' '}
+          Already have an account?&nbsp;
           <Link
             href='/sign-in'
             className='text-indigo-400 hover:text-indigo-300'

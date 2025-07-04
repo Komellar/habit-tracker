@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 
 import { CreateEditHabitForm } from '@/components/features/habit';
 import { Button } from '@/components/ui/button';
-import { getHabitById } from '@/db/habit-db';
+import { getHabitById } from '@/data-access/habit-db';
 
 interface Props {
   params: Promise<{

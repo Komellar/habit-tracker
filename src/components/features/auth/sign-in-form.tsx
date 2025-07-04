@@ -83,7 +83,7 @@ export const SignInForm = () => {
         </Button>
 
         <div className='text-center text-sm text-neutral-400'>
-          Don&apos;t have an account?{' '}
+          Don&apos;t have an account?&nbsp;
           <Link
             href='/sign-up'
             className='text-indigo-400 hover:text-indigo-300'

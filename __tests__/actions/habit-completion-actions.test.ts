@@ -5,21 +5,20 @@ import { addHabitCompletion } from '@/actions/habit-completion-actions';
 import {
   createHabitCompletion,
   getHabitCompletions,
-} from '@/db/habit-completion-db';
-import { editHabit } from '@/db/habit-db';
+} from '@/data-access/habit-completion-db';
+import { editHabit } from '@/data-access/habit-db';
 import { Prisma } from '@/prisma';
 
-// Mock dependencies
 vi.mock('next/cache', () => ({
   revalidatePath: vi.fn(),
 }));
 
-vi.mock('@/db/habit-completion-db', () => ({
+vi.mock('@/data-access/habit-completion-db', () => ({
   createHabitCompletion: vi.fn(),
   getHabitCompletions: vi.fn(),
 }));
 
-vi.mock('@/db/habit-db', () => ({
+vi.mock('@/data-access/habit-db', () => ({
   editHabit: vi.fn(),
 }));
 

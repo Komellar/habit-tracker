@@ -4,8 +4,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ZodError } from 'zod';
 
 import { createHabit, deleteHabit, updateHabit } from '@/actions/habit-actions';
-import { removeHabitCompletions } from '@/db/habit-completion-db';
-import { addHabit, editHabit, removeHabit } from '@/db/habit-db';
+import { removeHabitCompletions } from '@/data-access/habit-completion-db';
+import { addHabit, editHabit, removeHabit } from '@/data-access/habit-db';
 import { Prisma } from '@/prisma';
 import { createUpdateHabitSchema } from '@/schemas/habit';
 import { ColorKey } from '@/utils/colors';
@@ -21,13 +21,13 @@ vi.mock('next/navigation', () => ({
   },
 }));
 
-vi.mock('@/db/habit-db', () => ({
+vi.mock('@/data-access/habit-db', () => ({
   addHabit: vi.fn(),
   editHabit: vi.fn(),
   removeHabit: vi.fn(),
 }));
 
-vi.mock('@/db/habit-completion-db', () => ({
+vi.mock('@/data-access/habit-completion-db', () => ({
   removeHabitCompletions: vi.fn(),
 }));
 

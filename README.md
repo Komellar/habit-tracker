@@ -37,6 +37,8 @@ npm install
 
 ```bash
 DATABASE_URL=file:dev.db
+REDIS_URL=your_redis_url_from_upstash
+REDIS_TOKEN=your_redis_token_from_upstash
 ```
 
 3. Push the database

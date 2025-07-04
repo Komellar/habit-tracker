@@ -5,8 +5,8 @@ import { revalidatePath } from 'next/cache';
 import {
   createHabitCompletion,
   getHabitCompletions,
-} from '@/db/habit-completion-db';
-import { editHabit } from '@/db/habit-db';
+} from '@/data-access/habit-completion-db';
+import { editHabit } from '@/data-access/habit-db';
 import { Prisma } from '@/prisma';
 import { formatDate } from '@/utils/dates';
 

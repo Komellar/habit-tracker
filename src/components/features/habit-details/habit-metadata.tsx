@@ -46,7 +46,7 @@ export const HabitMetadata = ({
             />
           </svg>
           <span>
-            Started {formattedDate}{' '}
+            Started {formattedDate}&nbsp;
             <span className='text-neutral-400'>
               ({daysSinceCreation} days ago)
             </span>
@@ -70,7 +70,7 @@ export const HabitMetadata = ({
               />
             </svg>
             <span>
-              Target streak:{' '}
+              Target streak:&nbsp;
               <span className='font-medium'>
                 {goal} {goal === 1 ? 'day' : 'days'}
               </span>
