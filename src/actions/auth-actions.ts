@@ -9,8 +9,9 @@ import {
   comparePasswords,
   generateSalt,
   hashPassword,
-} from '@/utils/auth/hash-password';
-import { createUserSession, removeUserFromSession } from '@/utils/auth/session';
+  createUserSession,
+  removeUserFromSession,
+} from '@/utils/auth';
 import { handleZodErrors } from '@/utils/formHelpers';
 
 interface Errors {

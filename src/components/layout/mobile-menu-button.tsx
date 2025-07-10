@@ -76,11 +76,12 @@ export function MobileMenuButton({
                   </form>
                 );
               }
+
               return (
                 <Link
                   key={link.label}
                   href={link.href || '#'}
-                  className='text-neutral-200 hover:text-white transition-colors py-2 px-4 rounded-md hover:bg-neutral-700'
+                  className={`${link.label === 'Sign in' ? 'text-neutral-200 hover:text-white transition-colors py-2 px-4 rounded-md hover:bg-neutral-700 w-full' : 'text-neutral-200 hover:text-white transition-colors py-2 px-4 rounded-md hover:bg-neutral-700'}`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {link.label}

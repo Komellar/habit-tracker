@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { getCurrentUser } from '@/utils/auth/current-user';
+import { getCurrentUser } from '@/utils/auth';
 import { getNavLinks } from '@/utils/nav-links';
 
 import { MobileMenuButton } from './mobile-menu-button';
@@ -39,6 +39,16 @@ export async function Navbar() {
           {links.map((link) => {
             if (link.label === 'Sign Out') {
               return <SignOutButton key='sign-out' />;
+            } else if (link.label === 'Sign In') {
+              return (
+                <Link
+                  href='/sign-in'
+                  className='bg-neutral-800 hover:bg-neutral-700 text-neutral-200 hover:text-white px-4 py-2 rounded-md font-medium transition-colors duration-200 flex items-center gap-2'
+                  key='sign-in'
+                >
+                  Sign In
+                </Link>
+              );
             }
 
             return (

@@ -3,7 +3,7 @@ import { cache } from 'react';
 
 import prisma from '@/lib/db';
 
-import { getUserFromSession } from './session';
+import { getUserFromSession } from './session/session';
 
 type FullUser = Exclude<Awaited<ReturnType<typeof getUserFromDb>>, undefined>;
 

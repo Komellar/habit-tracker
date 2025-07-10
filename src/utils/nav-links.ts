@@ -1,7 +1,6 @@
 const publicLinks = [
-  { href: '/sign-in', label: 'Sign In' },
-  { href: '/sign-up', label: 'Sign Up' },
   { href: '/about', label: 'About' },
+  { href: '/sign-in', label: 'Sign In' },
 ];
 
 const privateLinks = [

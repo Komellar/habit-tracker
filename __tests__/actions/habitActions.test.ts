@@ -37,7 +37,7 @@ vi.mock('@/schemas/habit', () => ({
   },
 }));
 
-vi.mock('@/utils/auth/current-user', () => ({
+vi.mock('@/utils/auth', () => ({
   getCurrentUser: () => ({
     id: 'test-user-id',
     role: 'user',

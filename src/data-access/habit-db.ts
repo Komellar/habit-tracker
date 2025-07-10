@@ -1,6 +1,6 @@
 import prisma from '@/lib/db';
 import { Prisma } from '@/prisma/client';
-import { getCurrentUser } from '@/utils/auth/current-user';
+import { getCurrentUser } from '@/utils/auth';
 
 export async function addHabit(data: Prisma.HabitUncheckedCreateInput) {
   const user = await getCurrentUser();

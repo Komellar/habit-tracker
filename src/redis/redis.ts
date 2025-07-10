@@ -1,6 +1,8 @@
-import { Redis } from '@upstash/redis';
+import Redis from 'ioredis';
 
-export const redisClient = new Redis({
-  url: process.env.REDIS_URL,
-  token: process.env.REDIS_TOKEN,
+const redisClient = new Redis({
+  host: process.env.REDIS_HOST || 'localhost',
+  port: parseInt(process.env.REDIS_PORT || '6379'),
 });
+
+export { redisClient };
