@@ -35,27 +35,21 @@ export const SignInForm = () => {
             name='email'
             type='email'
             placeholder='your.email@example.com'
-            required
             className='w-full bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-500'
             defaultValue={state?.fields?.email || ''}
+            required
           />
           {state?.errors?.email && (
-            <p className='text-sm text-red-400'>{state.errors.email}</p>
+            <p className='text-sm text-red-400 text-left'>
+              {state.errors.email}
+            </p>
           )}
         </div>
 
         <div className='space-y-2'>
-          <div className='flex items-center justify-between'>
-            <Label htmlFor='password' className='font-medium text-neutral-200'>
-              Password
-            </Label>
-            <Link
-              href='/forgot-password'
-              className='text-sm text-indigo-400 hover:text-indigo-300'
-            >
-              Forgot password?
-            </Link>
-          </div>
+          <Label htmlFor='password' className='font-medium text-neutral-200'>
+            Password
+          </Label>
           <Input
             id='password'
             name='password'
@@ -66,7 +60,9 @@ export const SignInForm = () => {
             defaultValue={state?.fields?.password || ''}
           />
           {state?.errors?.password && (
-            <p className='text-sm text-red-400'>{state.errors.password}</p>
+            <p className='text-sm text-red-400 text-left'>
+              {state.errors.password}
+            </p>
           )}
         </div>
 

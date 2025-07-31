@@ -4,9 +4,16 @@ interface Props {
 }
 
 export const InfoBanner = ({ totalHabits, doneToday }: Props) => {
+  if (totalHabits === 0) {
+    return;
+  }
+
   if (totalHabits > 0 && doneToday === totalHabits) {
     return (
-      <div className='mb-6 rounded-xl bg-gradient-to-r from-green-800/80 to-emerald-900/80 p-4 flex items-center gap-3 shadow'>
+      <div
+        className='mb-6 rounded-xl bg-gradient-to-r from-green-800/80 to-emerald-900/80 p-4 flex items-center gap-3 shadow'
+        data-testid='banner-success'
+      >
         <span className='text-xl'>
           <svg
             className='inline w-6 h-6 mr-1 text-green-300'
@@ -33,7 +40,10 @@ export const InfoBanner = ({ totalHabits, doneToday }: Props) => {
   }
 
   return (
-    <div className='mb-6 rounded-xl bg-gradient-to-r from-indigo-800/80 to-indigo-900/80 p-4 flex items-center gap-3 shadow'>
+    <div
+      className='mb-6 rounded-xl bg-gradient-to-r from-indigo-800/80 to-indigo-900/80 p-4 flex items-center gap-3 shadow'
+      data-testid='banner-not-completed'
+    >
       <span className='text-xl'>
         <svg
           className='inline w-6 h-6 mr-1 text-blue-300'

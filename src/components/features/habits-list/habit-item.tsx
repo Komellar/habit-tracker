@@ -26,6 +26,7 @@ export const HabitItem = ({ habit, completedDates }: Props) => {
     <div
       key={habit.id}
       className='bg-neutral-900 rounded-xl shadow p-6 relative'
+      data-testid={`habit-item`}
     >
       <div className='flex items-start justify-between'>
         <div>
@@ -61,7 +62,7 @@ export const HabitItem = ({ habit, completedDates }: Props) => {
       </form>
       <div className='mt-6'>
         <div className='text-xs text-neutral-400 mb-1'>Last 7 days</div>
-        <div className='flex gap-1'>
+        <div className='flex gap-1' data-testid='calendar'>
           {last7Days.map((date, i) => {
             const isCompleted = completedDates.includes(formatDate(date));
             const day = date.getDate();
@@ -70,6 +71,7 @@ export const HabitItem = ({ habit, completedDates }: Props) => {
               <div
                 key={`${habit.id}_${day}`}
                 className={`flex-1 h-7 rounded ${i === 6 ? 'border-2 border-white' : ''} ${isCompleted ? BG_COLOR_MAP[habit.color] : 'border-neutral-400 border'}`}
+                aria-selected={isCompleted}
               >
                 <span className='flex items-center justify-center h-full text-xs font-semibold'>
                   {day}

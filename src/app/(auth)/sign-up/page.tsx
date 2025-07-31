@@ -8,7 +8,6 @@ export default async function SignUp() {
         <p className='text-lg text-neutral-300 mb-8'>
           Create an account to start tracking your habits.
         </p>
-        {/* Sign Up Form Component would go here */}
         <SignUpForm />
       </div>
     </main>

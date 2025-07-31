@@ -56,7 +56,7 @@ export async function signInUser(
 
     if (user == null) {
       return {
-        errors: { global: 'Unable to log in' },
+        errors: { global: 'Incorrect email or password' },
         fields,
       };
     }

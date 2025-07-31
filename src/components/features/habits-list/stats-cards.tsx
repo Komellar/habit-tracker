@@ -23,7 +23,10 @@ export const StatsCards = ({ doneToday, habits }: Props) => {
   return (
     <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4'>
       <div className='grid grid-cols-2 sm:grid-cols-4 gap-4 flex-1'>
-        <div className='bg-neutral-900 rounded-lg p-4 flex flex-col items-center shadow border border-neutral-800'>
+        <div
+          data-testid='stats-total'
+          className='bg-neutral-900 rounded-lg p-4 flex flex-col items-center shadow border border-neutral-800'
+        >
           <span className='mb-2'>
             <svg
               className='w-6 h-6 text-blue-400'
@@ -49,7 +52,10 @@ export const StatsCards = ({ doneToday, habits }: Props) => {
           <span className='text-neutral-400 text-xs mb-1'>Total Habits</span>
           <span className='text-2xl font-bold'>{habits.length}</span>
         </div>
-        <div className='bg-neutral-900 rounded-lg p-4 flex flex-col items-center shadow border border-neutral-800'>
+        <div
+          data-testid='stats-today'
+          className='bg-neutral-900 rounded-lg p-4 flex flex-col items-center shadow border border-neutral-800'
+        >
           <span className='mb-2'>
             <svg
               className='w-6 h-6 text-green-400'
@@ -69,7 +75,10 @@ export const StatsCards = ({ doneToday, habits }: Props) => {
           <span className='text-green-400 text-xs mb-1'>Done Today</span>
           <span className='text-2xl font-bold'>{doneToday}</span>
         </div>
-        <div className='bg-neutral-900 rounded-lg p-4 flex flex-col items-center shadow border border-neutral-800'>
+        <div
+          data-testid='stats-rate'
+          className='bg-neutral-900 rounded-lg p-4 flex flex-col items-center shadow border border-neutral-800'
+        >
           <span className='mb-2'>
             <svg
               className='w-6 h-6 text-purple-400'
@@ -89,7 +98,10 @@ export const StatsCards = ({ doneToday, habits }: Props) => {
           <span className='text-purple-400 text-xs mb-1'>Success Rate</span>
           <span className='text-2xl font-bold'>{totalSuccessRate}%</span>
         </div>
-        <div className='bg-neutral-900 rounded-lg p-4 flex flex-col items-center shadow border border-neutral-800'>
+        <div
+          data-testid='stats-streaks'
+          className='bg-neutral-900 rounded-lg p-4 flex flex-col items-center shadow border border-neutral-800'
+        >
           <span className='mb-2'>
             <svg
               className='w-6 h-6 text-orange-400'
