@@ -20,7 +20,7 @@ export const HabitsContainer = async ({
   limit,
 }: Props) => {
   const habitsCount = await getHabitsCount(search);
-  const requestKey = `${page}-${limit}-${search}-${Date.now()}`;
+  const requestKey = `${page}-${limit}-${search}`;
 
   return (
     <>

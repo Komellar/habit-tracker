@@ -38,13 +38,6 @@ export abstract class BasePage {
     cy.url().should('include', '/habits', { timeout: 10000 });
   }
 
-  signOut() {
-    cy.window()
-      .should('include.keys', ['atfManager'])
-      .its('atfManager')
-      .invoke('signOut');
-  }
-
   submit(): Cypress.Chainable {
     return cy.contains('Submit').click();
   }

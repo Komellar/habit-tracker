@@ -68,20 +68,16 @@ const initialCompletions: Prisma.HabitCompletionCreateArgs['data'][] = [
 
 export const habits = async () => {
   for (const habit of initialHabits) {
-    const newHabit = await prisma.habit.upsert({
+    await prisma.habit.upsert({
       create: habit,
       where: { id: habit.id },
       update: {},
     });
-
-    console.log('Created habit:', newHabit);
   }
 
   for (const completion of initialCompletions) {
-    const newCompletion = await prisma.habitCompletion.create({
+    await prisma.habitCompletion.create({
       data: completion,
     });
-
-    console.log('Created habit completion:', newCompletion);
   }
 };
