@@ -15,3 +15,21 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands';
+
+// Configure shorter timeouts
+Cypress.config({
+  defaultCommandTimeout: 4000,
+  execTimeout: 5000,
+  taskTimeout: 4000,
+  pageLoadTimeout: 10000,
+  requestTimeout: 4000,
+  responseTimeout: 10000,
+});
+
+// Clean up and disconnect from the database after all tests finish
+after(() => {
+  // Clean up any test data
+  cy.task('db:cleanup');
+  // Disconnect from the database
+  cy.task('db:disconnect');
+});

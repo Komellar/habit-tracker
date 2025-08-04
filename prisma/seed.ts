@@ -77,9 +77,11 @@ const initialCompletions: Prisma.HabitCompletionCreateArgs['data'][] = [
 ];
 
 async function main() {
-  await prisma.habitCompletion.deleteMany({});
-  await prisma.habit.deleteMany({});
-  await prisma.user.deleteMany({});
+  await prisma.$transaction([
+    prisma.habitCompletion.deleteMany({}),
+    prisma.habit.deleteMany({}),
+    prisma.user.deleteMany({}),
+  ]);
 
   console.log('Database cleared.');
 
