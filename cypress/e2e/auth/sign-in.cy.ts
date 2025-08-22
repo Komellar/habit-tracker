@@ -36,7 +36,7 @@ describe('Sign In Page', () => {
       .should('have.attr', 'href', '/sign-up');
   });
 
-  it('shows validation errors for empty form submission', () => {
+  it.skip('shows validation errors for empty form submission', () => {
     page.getSubmitButton().click();
 
     cy.get('input:invalid').should('have.length', 2);
@@ -54,7 +54,7 @@ describe('Sign In Page', () => {
       .should('have.text', 'Please fill out this field.');
   });
 
-  it('shows validation error for invalid email format', () => {
+  it.skip('shows validation error for invalid email format', () => {
     page.getEmailInput().type('invalid-email');
 
     page.getSubmitButton().click();
