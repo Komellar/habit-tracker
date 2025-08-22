@@ -8,7 +8,6 @@ export default async function SignIn() {
         <p className='text-lg text-neutral-300 mb-8'>
           Welcome back! Please sign in to continue.
         </p>
-        {/* Sign In Form Component would go here */}
         <SignInForm />
       </div>
     </main>

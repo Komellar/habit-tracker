@@ -1,6 +1,5 @@
+import prisma from '@/lib/db';
 import { Prisma } from '@/prisma';
-
-import prisma from '../../src/lib/db';
 
 import { user } from './login';
 
@@ -67,17 +66,29 @@ const initialCompletions: Prisma.HabitCompletionCreateArgs['data'][] = [
 ];
 
 export const habits = async () => {
-  for (const habit of initialHabits) {
-    await prisma.habit.upsert({
-      create: habit,
-      where: { id: habit.id },
-      update: {},
-    });
-  }
+  try {
+    for (const habit of initialHabits) {
+      try {
+        await prisma.habit.create({
+          data: habit,
+        });
+      } catch (error) {
+        console.error(`Failed to create habit ${habit.title}:`, error);
+        throw error;
+      }
+    }
 
-  for (const completion of initialCompletions) {
-    await prisma.habitCompletion.create({
-      data: completion,
-    });
+    for (const completion of initialCompletions) {
+      await prisma.habitCompletion.create({
+        data: completion,
+      });
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error seeding habits:', error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
   }
 };

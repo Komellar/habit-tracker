@@ -1,6 +1,6 @@
 import { defineConfig } from 'cypress';
 
-import { dbTasks } from './cypress/plugins/dbTasks';
+import { dbTasks } from 'cypress/plugins/dbTasks';
 
 export default defineConfig({
   e2e: {
