@@ -23,7 +23,7 @@ jobs:
         run: |
           echo "DATABASE_URL=${{ secrets.DATABASE_URL_TEST }}" >> .env
       - name: Set up test database
-        run: npx prisma migrate reset --force
+        run: npx prisma migrate deploy
       - name: Build app
         run: npm run build
       - name: Start app

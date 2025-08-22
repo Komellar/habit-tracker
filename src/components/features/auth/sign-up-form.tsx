@@ -1,17 +1,60 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { useActionState } from 'react';
+import { useTransition, useActionState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import { signUpUser } from '@/actions/auth-actions';
 import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { signUpSchema } from '@/schemas/auth';
 
 export const SignUpForm = () => {
+  const [isPending, startTransition] = useTransition();
   const [state, action, isLoading] = useActionState(signUpUser, {
     fields: {},
   });
+
+  const form = useForm<z.infer<typeof signUpSchema>>({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof signUpSchema>) {
+    const formData = new FormData();
+    Object.entries(values).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+
+    startTransition(async () => {
+      await action(formData);
+
+      if (state?.errors) {
+        Object.entries(state.errors).forEach(([key, value]) => {
+          if (key !== 'global' && value) {
+            form.setError(key as keyof z.infer<typeof signUpSchema>, {
+              type: 'server',
+              message: value,
+            });
+          }
+        });
+      }
+    });
+  }
 
   return (
     <div className='w-full max-w-md bg-neutral-900 text-white rounded-xl shadow-lg p-6 sm:p-8 border border-neutral-800'>
@@ -21,91 +64,81 @@ export const SignUpForm = () => {
 
       {state?.errors?.global && (
         <div className='bg-red-900/30 border border-red-800 text-red-200 px-4 py-3 rounded-md mb-6'>
-          {state?.errors.global}
+          {state.errors.global}
         </div>
       )}
 
-      <form action={action} className='space-y-5'>
-        <div className='space-y-2'>
-          <Label htmlFor='name' className='font-medium text-neutral-200'>
-            Full Name
-          </Label>
-          <Input
-            id='name'
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+          <FormField
+            control={form.control}
             name='name'
-            type='text'
-            placeholder='John Doe'
-            required
-            className='w-full bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-500'
-            disabled={isLoading}
-            defaultValue={state?.fields?.name || ''}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Full Name</FormLabel>
+                <FormControl>
+                  <Input type='text' placeholder='John Doe' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
 
-        <div className='space-y-2'>
-          <Label htmlFor='email' className='font-medium text-neutral-200'>
-            Email
-          </Label>
-          <Input
-            id='email'
+          <FormField
+            control={form.control}
             name='email'
-            type='email'
-            placeholder='email@example.com'
-            required
-            className='w-full bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-500'
-            disabled={isLoading}
-            defaultValue={state?.fields?.email || ''}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    type='email'
+                    placeholder='email@example.com'
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          {state?.errors?.email && (
-            <p className='text-sm text-red-400'>{state.errors.email}</p>
-          )}
-        </div>
 
-        <div className='space-y-2'>
-          <Label htmlFor='password' className='font-medium text-neutral-200'>
-            Password
-          </Label>
-          <Input
-            id='password'
+          <FormField
+            control={form.control}
             name='password'
-            type='password'
-            placeholder='••••••••'
-            required
-            minLength={8}
-            className='w-full bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-500'
-            disabled={isLoading}
-            defaultValue={state?.fields?.password || ''}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input type='password' placeholder='••••••••' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          {state?.errors?.password && (
-            <p className='text-sm text-red-400'>{state.errors.password}</p>
-          )}
-        </div>
 
-        <Button
-          type='submit'
-          className='w-full bg-indigo-600 hover:bg-indigo-500 text-white py-2 rounded-md transition-colors'
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <div className='flex items-center justify-center'>
-              <div className='animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2'></div>
-              Creating account...
-            </div>
-          ) : (
-            'Sign Up'
-          )}
-        </Button>
-
-        <div className='text-center text-neutral-400 text-sm mt-6'>
-          Already have an account?&nbsp;
-          <Link
-            href='/sign-in'
-            className='text-indigo-400 hover:text-indigo-300'
+          <Button
+            type='submit'
+            className='w-full p-2 text-white bg-indigo-600 hover:bg-indigo-500 rounded'
+            disabled={isLoading || isPending}
           >
-            Sign in
-          </Link>
-        </div>
-      </form>
+            {isLoading || isPending ? (
+              <div className='animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mx-auto'></div>
+            ) : (
+              'Sign Up'
+            )}
+          </Button>
+
+          <div className='text-center text-sm text-neutral-400'>
+            Already have an account?&nbsp;
+            <Link
+              href='/sign-in'
+              className='text-indigo-400 hover:text-indigo-300'
+            >
+              Sign in
+            </Link>
+          </div>
+        </form>
+      </Form>
     </div>
   );
 };
