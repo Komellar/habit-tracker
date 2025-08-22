@@ -1,17 +1,47 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { useActionState } from 'react';
+import { useTransition, useActionState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import { signInUser } from '@/actions/auth-actions';
 import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { signInSchema } from '@/schemas/auth';
 
 export const SignInForm = () => {
+  const [isPending, startTransition] = useTransition();
   const [state, action, isLoading] = useActionState(signInUser, {
     fields: {},
   });
+
+  const form = useForm<z.infer<typeof signInSchema>>({
+    resolver: zodResolver(signInSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof signInSchema>) {
+    const formData = new FormData();
+    formData.append('email', values.email);
+    formData.append('password', values.password);
+
+    startTransition(async () => {
+      await action(formData);
+    });
+  }
 
   return (
     <div className='w-full max-w-md bg-neutral-900 text-white rounded-xl shadow-lg p-6 sm:p-8 border border-neutral-800'>
@@ -21,73 +51,69 @@ export const SignInForm = () => {
 
       {state?.errors?.global && (
         <div className='bg-red-900/30 border border-red-800 text-red-200 px-4 py-3 rounded-md mb-6'>
-          {state?.errors.global}
+          {state.errors.global}
         </div>
       )}
 
-      <form action={action} className='space-y-5'>
-        <div className='space-y-2'>
-          <Label htmlFor='email' className='font-medium text-neutral-200'>
-            Email
-          </Label>
-          <Input
-            id='email'
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+          <FormField
+            control={form.control}
             name='email'
-            type='email'
-            placeholder='your.email@example.com'
-            className='w-full bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-500'
-            defaultValue={state?.fields?.email || ''}
-            required
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    type='email'
+                    placeholder='Enter your email'
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          {state?.errors?.email && (
-            <p className='text-sm text-red-400 text-left'>
-              {state.errors.email}
-            </p>
-          )}
-        </div>
-
-        <div className='space-y-2'>
-          <Label htmlFor='password' className='font-medium text-neutral-200'>
-            Password
-          </Label>
-          <Input
-            id='password'
+          <FormField
+            control={form.control}
             name='password'
-            type='password'
-            placeholder='••••••••'
-            required
-            className='w-full bg-neutral-800 text-white border border-neutral-700 placeholder-neutral-500'
-            defaultValue={state?.fields?.password || ''}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input
+                    type='password'
+                    placeholder='Enter your password'
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          {state?.errors?.password && (
-            <p className='text-sm text-red-400 text-left'>
-              {state.errors.password}
-            </p>
-          )}
-        </div>
-
-        <Button
-          type='submit'
-          className='w-full p-2 text-white bg-indigo-600 hover:bg-indigo-500 rounded'
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <div className='animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mx-auto'></div>
-          ) : (
-            'Sign In'
-          )}
-        </Button>
-
-        <div className='text-center text-sm text-neutral-400'>
-          Don&apos;t have an account?&nbsp;
-          <Link
-            href='/sign-up'
-            className='text-indigo-400 hover:text-indigo-300'
+          <Button
+            type='submit'
+            className='w-full p-2 text-white bg-indigo-600 hover:bg-indigo-500 rounded'
+            disabled={isLoading || isPending}
           >
-            Sign up
-          </Link>
-        </div>
-      </form>
+            {isLoading || isPending ? (
+              <div className='animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mx-auto'></div>
+            ) : (
+              'Sign In'
+            )}
+          </Button>
+
+          <div className='text-center text-sm text-neutral-400'>
+            Don&apos;t have an account?&nbsp;
+            <Link
+              href='/sign-up'
+              className='text-indigo-400 hover:text-indigo-300'
+            >
+              Sign up
+            </Link>
+          </div>
+        </form>
+      </Form>
     </div>
   );
 };

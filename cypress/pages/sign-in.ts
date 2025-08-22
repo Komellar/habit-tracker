@@ -1,7 +1,7 @@
 import { BasePage } from './base';
 
-export class SignIpPage extends BasePage {
-  protected url = () => '/sign-ip';
+export class SignInPage extends BasePage {
+  protected url = () => '/sign-in';
   protected autoSignIn = false;
 
   private selectors = {

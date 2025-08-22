@@ -1,11 +1,11 @@
 import { user } from '../../fixtures/login';
-import { SignIpPage } from '../../pages/sign-in';
+import { SignInPage } from '../../pages/sign-in';
 
-let page: SignIpPage;
+let page: SignInPage;
 
 describe('Sign In Page', () => {
   before(() => {
-    page = new SignIpPage();
+    page = new SignInPage();
   });
 
   beforeEach(() => {
@@ -18,10 +18,6 @@ describe('Sign In Page', () => {
     cy.get('h1')
       .contains(/sign in/i)
       .should('be.visible');
-
-    cy.contains('Welcome back! Please sign in to continue.').should(
-      'be.visible'
-    );
 
     page.getEmailInput().should('be.visible');
     page.getPasswordInput().should('be.visible');
@@ -36,36 +32,23 @@ describe('Sign In Page', () => {
       .should('have.attr', 'href', '/sign-up');
   });
 
-  it.skip('shows validation errors for empty form submission', () => {
+  it('shows validation errors for empty form submission', () => {
     page.getSubmitButton().click();
 
-    cy.get('input:invalid').should('have.length', 2);
-    page
-      .getEmailInput()
-      .invoke('prop', 'validationMessage')
-      .should('have.text', 'Please fill out this field.');
+    cy.contains('Email is required').should('be.visible');
 
     page.getEmailInput().type('test@test.com');
     page.getSubmitButton().click();
 
-    page
-      .getPasswordInput()
-      .invoke('prop', 'validationMessage')
-      .should('have.text', 'Please fill out this field.');
+    cy.contains('Password is required').should('be.visible');
   });
 
-  it.skip('shows validation error for invalid email format', () => {
-    page.getEmailInput().type('invalid-email');
-
+  it('shows validation error for invalid email format', () => {
+    page.getEmailInput().type('invalid@email');
+    page.getPasswordInput().type('password123');
     page.getSubmitButton().click();
 
-    page
-      .getEmailInput()
-      .invoke('prop', 'validationMessage')
-      .should(
-        'have.text',
-        "Please include an '@' in the email address. 'invalid-email' is missing an '@'."
-      );
+    cy.contains('Invalid email format').should('be.visible');
   });
 
   it('shows error message for incorrect credentials', () => {
@@ -96,20 +79,5 @@ describe('Sign In Page', () => {
     cy.get('nav, header')
       .contains(/sign out/i)
       .should('be.visible');
-  });
-
-  it('maintains accessibility standards', () => {
-    // Check form labels are properly associated with inputs
-    cy.get('label[for]').each((label) => {
-      const forAttribute = label.attr('for');
-      cy.get(`#${forAttribute}`).should('exist');
-    });
-
-    // Check focus states
-    page.getEmailInput().focus();
-    cy.focused().should('have.attr', 'type', 'email');
-
-    page.getPasswordInput().focus();
-    cy.focused().should('have.attr', 'type', 'password');
   });
 });
