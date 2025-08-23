@@ -2,7 +2,7 @@ import { HabitsPage } from '../pages/habits';
 
 let page: HabitsPage;
 
-describe('Sign In Page', () => {
+describe('Habits Page', () => {
   before(() => {
     page = new HabitsPage();
   });

@@ -29,4 +29,4 @@ jobs:
       - name: Start app
         run: npm run start &
       - name: Run Cypress E2E tests
-        run: npm run cypress:run
+        run: npm run cypress:run:ci

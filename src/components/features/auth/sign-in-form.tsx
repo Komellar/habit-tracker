@@ -35,8 +35,9 @@ export const SignInForm = () => {
 
   async function onSubmit(values: z.infer<typeof signInSchema>) {
     const formData = new FormData();
-    formData.append('email', values.email);
-    formData.append('password', values.password);
+    Object.entries(values).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
 
     startTransition(async () => {
       await action(formData);

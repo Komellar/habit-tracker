@@ -28,14 +28,24 @@ export abstract class BasePage {
 
   signIn(user: Credentials) {
     cy.visit('/sign-in');
-    cy.get('input[type="email"]').type(user.email);
-    cy.get('input[type="password"]').type(user.password);
 
-    cy.get('button[type="submit"]').click();
+    cy.get('h1')
+      .contains(/sign in/i)
+      .should('be.visible');
 
-    cy.contains('Incorrect email or password').should('not.exist');
+    cy.get('form').should('be.visible');
 
-    cy.url().should('include', '/habits', { timeout: 10000 });
+    cy.get('input[type="email"]').should('be.visible').type(user.email);
+    cy.get('input[type="password"]').should('be.visible').type(user.password);
+
+    cy.get('button[type="submit"]')
+      .should('be.visible')
+      .should('not.be.disabled')
+      .click();
+
+    cy.url().should('include', '/habits', { timeout: 15000 });
+
+    cy.get('body').should('contain', 'habit', { timeout: 5000 });
   }
 
   submit(): Cypress.Chainable {
