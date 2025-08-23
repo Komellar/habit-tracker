@@ -21,12 +21,30 @@ jobs:
         run: npm ci
       - name: Set up environment
         run: |
-          echo "DATABASE_URL=${{ secrets.DATABASE_URL_TEST }}" >> .env
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL_TEST }}" >> .env.test
       - name: Set up test database
-        run: npx prisma migrate deploy
+        run: |
+          npx prisma generate
+          npx prisma migrate deploy
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL_TEST }}
       - name: Build app
         run: npm run build
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL_TEST }}
       - name: Start app
         run: npm run start &
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL_TEST }}
+      - name: Wait for app to be ready
+        run: |
+          for i in {1..30}; do
+            if curl -f http://localhost:3000 > /dev/null 2>&1; then
+              echo "App is ready!"
+              break
+            fi
+            echo "Waiting for app to start... attempt $i"
+            sleep 2
+          done
       - name: Run Cypress E2E tests
         run: npm run cypress:run:ci

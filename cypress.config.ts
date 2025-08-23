@@ -5,8 +5,8 @@ import { dbTasks } from 'cypress/plugins/dbTasks';
 export default defineConfig({
   e2e: {
     baseUrl: 'http://localhost:3000',
-    pageLoadTimeout: 60000, // Increase page load timeout to 60 seconds
-    defaultCommandTimeout: 15000, // Increase command timeout
+    pageLoadTimeout: 30000,
+    defaultCommandTimeout: 10000,
     setupNodeEvents(on, _config) {
       on('task', dbTasks);
     },
