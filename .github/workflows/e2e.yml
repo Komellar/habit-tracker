@@ -30,15 +30,5 @@ jobs:
         run: npm run build
       - name: Start app
         run: npm run start &
-      - name: Wait for app to be ready
-        run: |
-          for i in {1..30}; do
-            if curl -f http://localhost:3000 > /dev/null 2>&1; then
-              echo "App is ready!"
-              break
-            fi
-            echo "Waiting for app to start... attempt $i"
-            sleep 2
-          done
       - name: Run Cypress E2E tests
         run: npm run cypress:run:ci
