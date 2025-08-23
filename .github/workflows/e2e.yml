@@ -22,6 +22,7 @@ jobs:
       - name: Set up environment
         run: |
           echo "DATABASE_URL=${{ secrets.DATABASE_URL_TEST }}" >> .env.test
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL_TEST }}" >> .env
       - name: Set up test database
         run: |
           npx prisma generate
