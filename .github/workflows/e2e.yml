@@ -26,16 +26,10 @@ jobs:
         run: |
           npx prisma generate
           npx prisma migrate deploy
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL_TEST }}
       - name: Build app
         run: npm run build
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL_TEST }}
       - name: Start app
         run: npm run start &
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL_TEST }}
       - name: Wait for app to be ready
         run: |
           for i in {1..30}; do
