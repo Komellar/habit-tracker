@@ -19,9 +19,6 @@ jobs:
           node-version: '20'
       - name: Install dependencies
         run: npm ci
-      - name: Set up environment
-        run: |
-          echo "DATABASE_URL=${{ secrets.DATABASE_URL_TEST }}" >> .env.test
       - name: Set up test database
         run: |
           npx prisma generate
@@ -30,8 +27,6 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL_TEST }}
       - name: Build app
         run: npm run build
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL_TEST }}
       - name: Start app
         run: npm run start &
         env:
