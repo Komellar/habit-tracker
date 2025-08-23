@@ -46,13 +46,12 @@ npm install
 
 ```bash
 DATABASE_URL=file:dev.db
-JWT_SECRET=your_secure_jwt_secret -> optional
 ```
 
-4. Push the database
+4. Set up the database (apply migrations)
 
 ```bash
-npx prisma db push
+npx prisma migrate deploy
 ```
 
 5. Seed the database with initial data
