@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { useTransition, useActionState } from 'react';
+import { useTransition, useActionState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -42,19 +42,20 @@ export const SignUpForm = () => {
 
     startTransition(async () => {
       await action(formData);
-
-      if (state?.errors) {
-        Object.entries(state.errors).forEach(([key, value]) => {
-          if (key !== 'global' && value) {
-            form.setError(key as keyof z.infer<typeof signUpSchema>, {
-              type: 'server',
-              message: value,
-            });
-          }
-        });
-      }
     });
   }
+
+  useEffect(() => {
+    if (state?.errors) {
+      Object.entries(state.errors).forEach(([field, message]) => {
+        if (field !== 'global' && message) {
+          form.setError(field as keyof z.infer<typeof signUpSchema>, {
+            message,
+          });
+        }
+      });
+    }
+  }, [state, form]);
 
   return (
     <div className='w-full max-w-md bg-neutral-900 text-white rounded-xl shadow-lg p-6 sm:p-8 border border-neutral-800'>
