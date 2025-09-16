@@ -52,6 +52,7 @@ DATABASE_URL=file:dev.db
 
 ```bash
 npx prisma migrate deploy
+npx prisma generate
 ```
 
 5. Seed the database with initial data
